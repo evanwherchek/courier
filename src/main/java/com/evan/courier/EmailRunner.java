@@ -1,5 +1,6 @@
 package com.evan.courier;
 
+import com.evan.courier.builders.EmailContentBuilder;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +17,14 @@ public class EmailRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("Starting email sending process...");
 
-        emailService.sendSimpleEmail(
-                "evanwherchek@gmail.com",
-                "Test Email from Spring Boot",
-                "Hello! This is a test email sent from Spring Boot application."
-        );
+        EmailContentBuilder emailContentBuilder = new EmailContentBuilder(getClass().getClassLoader().getResource("courier.yaml").getPath());
+        String recipient = emailContentBuilder.getRecipient();
+        String subject = emailContentBuilder.getEmailSubject();
+        String htmlContent = emailContentBuilder.generateHtmlContent();
 
-        System.out.println("Email sending process completed. Application will now continue running.");
+        emailService.sendEmail(recipient, subject, htmlContent);
+
+        System.out.println("Email sent successfully. Exiting application.");
+        System.exit(0);
     }
 }

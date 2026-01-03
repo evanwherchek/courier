@@ -22,6 +22,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	testImplementation 'org.springframework.boot:spring-boot-starter-mail-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.20.1'
 }
 
 tasks.named('test') {
