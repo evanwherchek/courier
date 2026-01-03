@@ -33,6 +33,7 @@ public class EmailContentBuilder {
         stringBuilder.append("    <title>Interest Rate Widget</title>\n");
         stringBuilder.append("</head>\n");
         stringBuilder.append("<body style=\"margin: 0; padding: 20px; font-family: Arial, sans-serif;\">\n");
+        stringBuilder.append("<h1>Good morning!</h1>");
 
         for (Section section : config.getSections()) {
             switch (section.getType()) {

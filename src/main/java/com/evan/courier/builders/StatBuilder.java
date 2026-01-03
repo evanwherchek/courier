@@ -1,19 +1,35 @@
 package com.evan.courier.builders;
 
-public class StatBuilder {
-    public StatBuilder() {
+import com.evan.courier.utils.TemplateEngine;
 
+import java.util.HashMap;
+import java.util.Map;
+
+public class StatBuilder {
+    private String rate;
+    private String meetingDate;
+
+    public StatBuilder() {
+        // Default values - these should be set via setters or constructor parameters
+        this.rate = "3%";
+        this.meetingDate = "1/23";
+    }
+
+    public StatBuilder setRate(String rate) {
+        this.rate = rate;
+        return this;
+    }
+
+    public StatBuilder setMeetingDate(String meetingDate) {
+        this.meetingDate = meetingDate;
+        return this;
     }
 
     public String build() {
-        return "    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
-                "        <tr>\n" +
-                "            <td align=\"center\">\n" +
-                "                <p style=\"margin: 10px 0; font-size: 16px; text-align: center;\">The current interest rate is</p>\n" +
-                "                <p style=\"margin: 20px 0; font-size: 48px; font-weight: bold; text-align: center;\">3%</p>\n" +
-                "                <p style=\"margin: 10px 0; font-size: 16px; text-align: center;\">The fed will meet again on 1/23.</p>\n" +
-                "            </td>\n" +
-                "        </tr>\n" +
-                "    </table>\n";
+        Map<String, Object> data = new HashMap<>();
+        data.put("rate", rate);
+        data.put("meetingDate", meetingDate);
+
+        return TemplateEngine.processTemplate("stat-widget.ftl", data);
     }
 }
