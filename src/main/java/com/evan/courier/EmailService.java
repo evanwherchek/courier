@@ -2,6 +2,7 @@ package com.evan.courier;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,10 @@ public class EmailService {
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlContent, true);
+
+        // Add inline image attachment
+        ClassPathResource sunImage = new ClassPathResource("images/sun.png");
+        helper.addInline("sun", sunImage);
 
         mailSender.send(message);
         System.out.println("Email sent successfully to: " + to);
