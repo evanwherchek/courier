@@ -9,8 +9,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class EmailContentBuilder {
     private final YamlConfig config;
@@ -39,8 +38,11 @@ public class EmailContentBuilder {
                     contentBuilder.append(graphBuilder.build());
                     break;
                 case WidgetType.COMPARISON:
-                    ComparisonBuilder comparisonBuilder = new ComparisonBuilder();
-                    contentBuilder.append(comparisonBuilder.build());
+                    List<String> symbols = section.getMetricAsList();
+                    if (symbols != null) {
+                        ComparisonBuilder comparisonBuilder = new ComparisonBuilder(symbols);
+                        contentBuilder.append(comparisonBuilder.build());
+                    }
                     break;
             }
         }

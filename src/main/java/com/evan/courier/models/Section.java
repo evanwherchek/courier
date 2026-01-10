@@ -1,13 +1,15 @@
 package com.evan.courier.models;
 
+import java.util.List;
+
 public class Section {
     private String type;
-    private String metric;
+    private Object metric;
 
     public Section() {
     }
 
-    public Section(String type, String metric) {
+    public Section(String type, Object metric) {
         this.type = type;
         this.metric = metric;
     }
@@ -20,11 +22,26 @@ public class Section {
         this.type = type;
     }
 
-    public String getMetric() {
+    public Object getMetric() {
         return metric;
     }
 
-    public void setMetric(String metric) {
+    public void setMetric(Object metric) {
         this.metric = metric;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getMetricAsList() {
+        if (metric instanceof List) {
+            return (List<String>) metric;
+        }
+        return null;
+    }
+
+    public String getMetricAsString() {
+        if (metric instanceof String) {
+            return (String) metric;
+        }
+        return null;
     }
 }
