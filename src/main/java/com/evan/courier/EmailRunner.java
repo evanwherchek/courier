@@ -20,9 +20,8 @@ public class EmailRunner implements CommandLineRunner {
         EmailContentBuilder emailContentBuilder = new EmailContentBuilder(getClass().getClassLoader().getResource("courier.yaml").getPath());
         String recipient = emailContentBuilder.getRecipient();
         String subject = emailContentBuilder.getEmailSubject();
-        String htmlContent = emailContentBuilder.generateHtmlContent();
 
-        emailService.sendEmail(recipient, subject, htmlContent);
+        emailService.sendEmail(recipient, subject, emailContentBuilder.generateHtmlContent());
 
         System.out.println("Email sent successfully. Exiting application.");
         System.exit(0);

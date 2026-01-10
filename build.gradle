@@ -26,6 +26,10 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.20.1'
 	implementation 'org.freemarker:freemarker:2.3.32'
+
+	// SVG to PNG conversion
+	implementation 'org.apache.xmlgraphics:batik-transcoder:1.17'
+	implementation 'org.apache.xmlgraphics:batik-codec:1.17'
 }
 
 tasks.named('test') {

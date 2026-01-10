@@ -25,9 +25,12 @@ public class EmailService {
         helper.setSubject(subject);
         helper.setText(htmlContent, true);
 
-        // Add inline image attachment
+        // Add inline image attachments
         ClassPathResource sunImage = new ClassPathResource("images/sun.png");
         helper.addInline("sun", sunImage);
+
+        ClassPathResource graphImage = new ClassPathResource("images/graph.png");
+        helper.addInline("graph", graphImage);
 
         mailSender.send(message);
         System.out.println("Email sent successfully to: " + to);
