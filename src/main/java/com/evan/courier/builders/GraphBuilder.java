@@ -46,7 +46,7 @@ public class GraphBuilder {
 
         // Build data model
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("chartTitle", "Monthly Sales");
+        dataModel.put("chartTitle", "Open tech jobs");
         dataModel.put("dataPoints", dataPoints);
         dataModel.put("maxValue", maxValue);
 
