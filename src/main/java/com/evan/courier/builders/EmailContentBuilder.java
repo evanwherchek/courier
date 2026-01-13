@@ -38,7 +38,7 @@ public class EmailContentBuilder {
                     contentBuilder.append(graphBuilder.build());
                     break;
                 case WidgetType.COMPARISON:
-                    List<String> symbols = section.getMetricAsList();
+                    List<String> symbols = section.getSymbols();
                     if (symbols != null) {
                         ComparisonBuilder comparisonBuilder = new ComparisonBuilder(symbols);
                         contentBuilder.append(comparisonBuilder.build());

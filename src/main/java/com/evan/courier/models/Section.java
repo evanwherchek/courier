@@ -5,6 +5,7 @@ import java.util.List;
 public class Section {
     private String type;
     private Object metric;
+    private List<String> symbols;
 
     public Section() {
     }
@@ -30,18 +31,11 @@ public class Section {
         this.metric = metric;
     }
 
-    @SuppressWarnings("unchecked")
-    public List<String> getMetricAsList() {
-        if (metric instanceof List) {
-            return (List<String>) metric;
-        }
-        return null;
+    public List<String> getSymbols() {
+        return symbols;
     }
 
-    public String getMetricAsString() {
-        if (metric instanceof String) {
-            return (String) metric;
-        }
-        return null;
+    public void setSymbols(List<String> symbols) {
+        this.symbols = symbols;
     }
 }

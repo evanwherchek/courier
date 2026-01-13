@@ -25,7 +25,11 @@ dependencies {
 
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.20.1'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1'
 	implementation 'org.freemarker:freemarker:2.3.32'
+
+	// HTTP client
+	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
 	// SVG to PNG conversion
 	implementation 'org.apache.xmlgraphics:batik-transcoder:1.17'
