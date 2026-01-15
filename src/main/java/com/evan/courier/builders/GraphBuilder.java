@@ -24,16 +24,18 @@ public class GraphBuilder {
         public double getValue() { return value; }
     }
 
+    private String title;
+    private List<DataPoint> dataPoints;
+
+    public GraphBuilder(String title, List<DataPoint> dataPoints) {
+        this.title = title;
+        this.dataPoints = dataPoints;
+    }
+
     public String build() {
-        // Prepare data
-        List<DataPoint> dataPoints = Arrays.asList(
-            new DataPoint("Jan", 45.5),
-            new DataPoint("Feb", 67.2),
-            new DataPoint("Mar", 52.8),
-            new DataPoint("Apr", 78.5),
-            new DataPoint("May", 85.3),
-            new DataPoint("Jun", 92.1)
-        );
+        if (dataPoints == null || dataPoints.isEmpty()) {
+            throw new IllegalArgumentException("Data points cannot be null or empty");
+        }
 
         // Find max value for scaling
         double maxValue = dataPoints.stream()
@@ -46,7 +48,7 @@ public class GraphBuilder {
 
         // Build data model
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("chartTitle", "Open tech jobs");
+        dataModel.put("chartTitle", title);
         dataModel.put("dataPoints", dataPoints);
         dataModel.put("maxValue", maxValue);
 

@@ -6,30 +6,43 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StatBuilder {
-    private String rate;
-    private String meetingDate;
+    private String title;
+    private Object value;
+    private String subtitle;
 
-    public StatBuilder() {
-        // Default values - these should be set via setters or constructor parameters
-        this.rate = "3%";
-        this.meetingDate = "1/23";
+    public StatBuilder(String title, Object value) {
+        this.title = title;
+        this.value = value;
     }
 
-    public StatBuilder setRate(String rate) {
-        this.rate = rate;
-        return this;
-    }
-
-    public StatBuilder setMeetingDate(String meetingDate) {
-        this.meetingDate = meetingDate;
-        return this;
+    public StatBuilder(String title, Object value, String subtitle) {
+        this.title = title;
+        this.value = value;
+        this.subtitle = subtitle;
     }
 
     public String build() {
         Map<String, Object> data = new HashMap<>();
-        data.put("rate", rate);
-        data.put("meetingDate", meetingDate);
+        if (title != null) {
+            data.put("title", title);
+        }
+        data.put("value", formatValue(value));
+        if (subtitle != null) {
+            data.put("subtitle", subtitle);
+        }
 
         return TemplateEngine.processTemplate("stat-widget.ftl", data);
+    }
+
+    /**
+     * Format the value for display
+     */
+    private String formatValue(Object value) {
+        if (value instanceof Double) {
+            Double doubleValue = (Double) value;
+            // Format to 2 decimal places
+            return String.format("%.2f", doubleValue);
+        }
+        return value.toString();
     }
 }

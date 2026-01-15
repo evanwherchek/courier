@@ -1,18 +1,17 @@
 package com.evan.courier.models;
 
 import java.util.List;
+import java.util.Map;
 
 public class Section {
     private String type;
-    private Object metric;
+    private String title;
+    private Map<String, Object> data;
+
+    // Legacy fields for backward compatibility
     private List<String> symbols;
 
     public Section() {
-    }
-
-    public Section(String type, Object metric) {
-        this.type = type;
-        this.metric = metric;
     }
 
     public String getType() {
@@ -23,12 +22,20 @@ public class Section {
         this.type = type;
     }
 
-    public Object getMetric() {
-        return metric;
+    public String getTitle() {
+        return title;
     }
 
-    public void setMetric(Object metric) {
-        this.metric = metric;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, Object> data) {
+        this.data = data;
     }
 
     public List<String> getSymbols() {
