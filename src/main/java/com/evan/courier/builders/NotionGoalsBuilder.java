@@ -61,6 +61,12 @@ public class NotionGoalsBuilder {
                     for (JsonNode page : results) {
                         JsonNode properties = page.get("properties");
 
+                        // Check if goal should be included in report
+                        boolean includeOnReport = extractCheckbox(properties, "Include on report");
+                        if (!includeOnReport) {
+                            continue;
+                        }
+
                         // Extract goal properties from Notion
                         String title = extractTitle(properties);
                         double current = extractNumber(properties, "Current");
@@ -115,6 +121,16 @@ public class NotionGoalsBuilder {
             }
         }
         return "";
+    }
+
+    private boolean extractCheckbox(JsonNode properties, String propertyName) {
+        if (properties.has(propertyName)) {
+            JsonNode checkboxProp = properties.get(propertyName);
+            if (checkboxProp.has("checkbox")) {
+                return checkboxProp.get("checkbox").asBoolean();
+            }
+        }
+        return false;
     }
 
     private Map<String, Object> createGoal(String title, double current, double total, String category) {
