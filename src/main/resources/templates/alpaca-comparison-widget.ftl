@@ -15,11 +15,11 @@
         <#list symbols as symbolInfo>
         <tr style="border-bottom: 1px solid #e0e0e0;">
             <td style="padding: 12px; font-weight: 500; color: #333;">${symbolInfo.symbol}</td>
-            <td style="padding: 12px; text-align: right; color: <#if (symbolInfo.weeklyChange >= 0)>#16a34a<#else>#dc2626</#if>; font-weight: 600;">
-                <#if (symbolInfo.weeklyChange >= 0)>▲ +<#else>▼ </#if>${symbolInfo.weeklyChange?string["0.##"]}%
+            <td style="padding: 12px; text-align: right; color: <#if symbolInfo.weeklyChange?starts_with("-")>#dc2626<#else>#16a34a</#if>; font-weight: 600;">
+                <#if symbolInfo.weeklyChange?starts_with("-")>▼<#else>▲</#if> ${symbolInfo.weeklyChange}
             </td>
-            <td style="padding: 12px; text-align: right; color: <#if (symbolInfo.ytdChange >= 0)>#16a34a<#else>#dc2626</#if>; font-weight: 600;">
-                <#if (symbolInfo.ytdChange >= 0)>▲ +<#else>▼ </#if>${symbolInfo.ytdChange?string["0.##"]}%
+            <td style="padding: 12px; text-align: right; color: <#if symbolInfo.ytdChange?starts_with("-")>#dc2626<#else>#16a34a</#if>; font-weight: 600;">
+                <#if symbolInfo.ytdChange?starts_with("-")>▼<#else>▲</#if> ${symbolInfo.ytdChange}
             </td>
         </tr>
         </#list>
