@@ -8,6 +8,13 @@
     </thead>
     <tbody>
         <#list goals as goal>
+        <#if goal_index == 0 || goal.category != goals[goal_index - 1].category>
+        <tr>
+            <td style="padding: 12px 16px 8px 16px; background-color: #f5f5f5;">
+                <span style="font-weight: 700; color: #1a1a1a; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${goal.category}</span>
+            </td>
+        </tr>
+        </#if>
         <tr style="border-bottom: 1px solid #e0e0e0;">
             <td style="padding: 16px;">
                 <div style="margin-bottom: 8px;">

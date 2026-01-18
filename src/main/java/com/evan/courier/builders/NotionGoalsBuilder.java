@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NotionGoalsBuilder {
     private final OkHttpClient httpClient;
@@ -68,10 +65,16 @@ public class NotionGoalsBuilder {
                         String title = extractTitle(properties);
                         double current = extractNumber(properties, "Current");
                         double total = extractNumber(properties, "Target");
+                        String category = extractSelect(properties, "Category");
 
-                        goalsData.add(createGoal(title, current, total));
+                        goalsData.add(createGoal(title, current, total, category));
                     }
                 }
+
+                // Sort goals by category
+                goalsData.sort(Comparator.comparing(goal ->
+                    (String) goal.getOrDefault("category", ""),
+                    String.CASE_INSENSITIVE_ORDER));
 
                 return goalsData;
             } else {
@@ -101,11 +104,25 @@ public class NotionGoalsBuilder {
         return 0.0;
     }
 
-    private Map<String, Object> createGoal(String title, double current, double total) {
+    private String extractSelect(JsonNode properties, String propertyName) {
+        if (properties.has(propertyName)) {
+            JsonNode selectProp = properties.get(propertyName);
+            if (selectProp.has("select") && !selectProp.get("select").isNull()) {
+                JsonNode select = selectProp.get("select");
+                if (select.has("name")) {
+                    return select.get("name").asText();
+                }
+            }
+        }
+        return "";
+    }
+
+    private Map<String, Object> createGoal(String title, double current, double total, String category) {
         Map<String, Object> goal = new HashMap<>();
         goal.put("title", title);
         goal.put("current", formatValue(current));
         goal.put("total", formatValue(total));
+        goal.put("category", category);
         goal.put("progressPercentage", Math.min((current / total) * 100, 100));
         return goal;
     }
