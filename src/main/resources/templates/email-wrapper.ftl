@@ -37,7 +37,7 @@
 
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px; border-spacing: 0; border-collapse: collapse;">
                                 <tr>
-                                    <td style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; padding: 30px;">
+                                    <td style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; padding: 20px 0px;">
 ${content}
                                     </td>
                                 </tr>
