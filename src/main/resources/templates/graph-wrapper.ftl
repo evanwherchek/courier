@@ -1,1 +1,0 @@
-<div><img src="cid:graph" alt="Chart" width="800" height="400" style="display:block; max-width:100%;" /></div>

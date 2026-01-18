@@ -40,6 +40,10 @@ public class EmailContentBuilder {
                         contentBuilder.append(comparisonBuilder.build());
                     }
                     break;
+                case WidgetType.NOTION_GOALS:
+                    NotionGoalsBuilder notionGoalsBuilder = new NotionGoalsBuilder();
+                    contentBuilder.append(notionGoalsBuilder.build());
+                    break;
             }
         }
 
