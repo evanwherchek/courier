@@ -12,7 +12,7 @@
             <td style="padding: 16px;">
                 <div style="margin-bottom: 8px;">
                     <span style="font-weight: 600; color: #333; font-size: 14px;">${goal.title}</span>
-                    <span style="float: right; font-size: 12px; color: #666;">${goal.current} / ${goal.total}</span>
+                    <span style="float: right; font-size: 12px; color: #333;">${goal.current} / ${goal.total}</span>
                 </div>
                 <div style="width: 100%; height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
                     <div style="width: ${goal.progressPercentage}%; height: 100%; background-color: #16a34a; transition: width 0.3s ease;"></div>
