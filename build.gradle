@@ -31,6 +31,9 @@ dependencies {
 	// HTTP client
 	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
+	// HTML parsing
+	implementation 'org.jsoup:jsoup:1.17.2'
+
 	// SVG to PNG conversion
 	implementation 'org.apache.xmlgraphics:batik-transcoder:1.17'
 	implementation 'org.apache.xmlgraphics:batik-codec:1.17'
