@@ -1,9 +1,9 @@
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 50px;">
     <tr>
         <td align="center">
-            <p style="margin: 5px 0; font-size: 16px; text-align: center;">The current federal funds rate is</p>
+            <p style="margin-bottom: 5px 0; font-size: 16px; text-align: center;">The current federal funds rate is</p>
             <p style="margin: 10px 0; font-size: 48px; font-weight: bold; text-align: center;">${currentInterestRate}%</p>
-            <p style="margin: 5px 0; font-size: 16px; text-align: center;">The fed will meet again on ${nextMeetingDate}</p>
+            <p style="margin-top: 5px 0; font-size: 16px; text-align: center;">The fed will meet again on ${nextMeetingDate}</p>
         </td>
     </tr>
 </table>
