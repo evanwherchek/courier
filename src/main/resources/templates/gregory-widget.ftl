@@ -1,4 +1,5 @@
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 50px;">
+    <p style="margin: 10px 0; font-size: 32px; font-weight: bold; text-align: center;">Gregory's Analysis</p>
     <tr>
         <td align="center" style="padding: 20px 0;">
             <!-- Speech bubble container -->
@@ -11,7 +12,7 @@
             </table>
 
             <!-- Gregory image -->
-            <img src="cid:gregory" alt="Gregory" style="max-width: 200px; height: auto; display: block; margin: 0 auto;" />
+            <img src="cid:gregory" alt="Gregory" style="max-width: 300px; height: auto; display: block; margin: 0 auto; border-radius: 10px;" />
         </td>
     </tr>
 </table>
