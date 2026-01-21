@@ -44,6 +44,13 @@ public class EmailContentBuilder {
                     NotionGoalsBuilder notionGoalsBuilder = new NotionGoalsBuilder();
                     contentBuilder.append(notionGoalsBuilder.build());
                     break;
+                case WidgetType.GREGORY:
+                    String speech = section.getSpeech();
+                    if (speech != null) {
+                        GregoryBuilder gregoryBuilder = new GregoryBuilder(speech);
+                        contentBuilder.append(gregoryBuilder.build());
+                    }
+                    break;
             }
         }
 

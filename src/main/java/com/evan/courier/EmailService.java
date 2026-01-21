@@ -29,6 +29,9 @@ public class EmailService {
         ClassPathResource sunImage = new ClassPathResource("images/sun.png");
         helper.addInline("sun", sunImage);
 
+        ClassPathResource gregoryImage = new ClassPathResource("images/gregory.png");
+        helper.addInline("gregory", gregoryImage);
+
         mailSender.send(message);
         System.out.println("Email sent successfully to: " + to);
     }
