@@ -27,7 +27,7 @@
                                 </tr>
                             </table>
 
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px; border-spacing: 0; border-collapse: collapse;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse;">
                                 <tr>
                                     <td>
                                         <p style="font-family: Georgia, 'Times New Roman', serif; font-size: 24px; color: #000; margin: 20px 0 0 0; padding: 0;">Here's your weekly report:</p>
@@ -35,7 +35,7 @@
                                 </tr>
                             </table>
 
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px; border-spacing: 0; border-collapse: collapse;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse;">
                                 <tr>
                                     <td style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; padding: 20px 0px;">
 ${content}
