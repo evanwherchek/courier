@@ -28,6 +28,10 @@ public class InterestRateBuilder {
     private static final String FEDERAL_FUNDS_SERIES_ID = "FEDFUNDS";
     private static final String FOMC_CALENDAR_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm";
 
+    // Cached data for LLM analysis
+    private String cachedInterestRate;
+    private String cachedMeetingDate;
+
     public InterestRateBuilder() {
         this.httpClient = new OkHttpClient();
         this.objectMapper = new ObjectMapper();
@@ -35,9 +39,14 @@ public class InterestRateBuilder {
     }
 
     public String build() throws IOException {
+        // Fetch and cache data
+        cachedInterestRate = getCurrentFederalFundsRate();
+        cachedMeetingDate = getNextFomcMeetingDate();
+
+        // Build HTML
         Map<String, Object> data = new HashMap<>();
-        data.put("currentInterestRate", getCurrentFederalFundsRate());
-        data.put("nextMeetingDate", getNextFomcMeetingDate());
+        data.put("currentInterestRate", cachedInterestRate);
+        data.put("nextMeetingDate", cachedMeetingDate);
 
         return TemplateEngine.processTemplate("interest-rate-widget.ftl", data);
     }
@@ -137,5 +146,21 @@ public class InterestRateBuilder {
                 throw new IOException("Failed to fetch FOMC calendar page with code: " + response.code());
             }
         }
+    }
+
+    /**
+     * Get the cached current interest rate
+     * @return The current federal funds rate, or null if not yet fetched
+     */
+    public String getCurrentRate() {
+        return cachedInterestRate;
+    }
+
+    /**
+     * Get the cached next FOMC meeting date
+     * @return The next meeting date, or null if not yet fetched
+     */
+    public String getMeetingDate() {
+        return cachedMeetingDate;
     }
 }

@@ -22,6 +22,9 @@ public class AlpacaComparisonBuilder {
     private final String apiSecretKey;
     private static final String BASE_URL = "https://data.alpaca.markets";
 
+    // Cached data for LLM analysis
+    private List<Map<String, Object>> cachedSymbolData;
+
     public AlpacaComparisonBuilder(List<String> symbols) {
         this.symbols = symbols;
         this.httpClient = new OkHttpClient();
@@ -32,7 +35,7 @@ public class AlpacaComparisonBuilder {
 
     public String build() throws IOException {
         Map<String, Object> data = new HashMap<>();
-        List<Map<String, Object>> symbolData = new java.util.ArrayList<>();
+        cachedSymbolData = new java.util.ArrayList<>();
 
         for (String symbol : symbols) {
             Map<String, Object> symbolInfo = new HashMap<>();
@@ -41,10 +44,10 @@ public class AlpacaComparisonBuilder {
             symbolInfo.put("weeklyChange", getWeeklyChange(symbol));
             symbolInfo.put("ytdChange", getYtdChange(symbol));
 
-            symbolData.add(symbolInfo);
+            cachedSymbolData.add(symbolInfo);
         }
 
-        data.put("symbols", symbolData);
+        data.put("symbols", cachedSymbolData);
 
         return TemplateEngine.processTemplate("alpaca-comparison-widget.ftl", data);
     }
@@ -107,5 +110,13 @@ public class AlpacaComparisonBuilder {
                 throw new IOException("API request failed with code: " + response.code() + " for symbol: " + symbol);
             }
         }
+    }
+
+    /**
+     * Get the cached symbols data
+     * @return List of symbol data maps, or null if not yet fetched
+     */
+    public List<Map<String, Object>> getSymbolsData() {
+        return cachedSymbolData;
     }
 }

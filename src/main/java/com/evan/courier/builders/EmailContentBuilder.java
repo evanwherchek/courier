@@ -2,6 +2,7 @@ package com.evan.courier.builders;
 
 import com.evan.courier.models.Section;
 import com.evan.courier.models.YamlConfig;
+import com.evan.courier.utils.AnthropicService;
 import com.evan.courier.types.WidgetType;
 import com.evan.courier.utils.TemplateEngine;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,33 +24,46 @@ public class EmailContentBuilder {
         }
     }
 
-    public String generateHtmlContent () throws IOException {
+    public String generateHtmlContent() throws IOException {
         // Build the content sections
         StringBuilder contentBuilder = new StringBuilder();
+        Map<String, Object> widgetDataMap = new HashMap<>();
+        AnthropicService anthropicService = new AnthropicService();
+
+        // Store builder references to extract data later
+        InterestRateBuilder interestRateBuilder = null;
+        AlpacaComparisonBuilder alpacaComparisonBuilder = null;
 
         for (Section section : config.getSections()) {
             switch (section.getType()) {
                 case WidgetType.INTEREST_RATE:
-                    InterestRateBuilder statBuilder = new InterestRateBuilder();
-                    contentBuilder.append(statBuilder.build());
+                    interestRateBuilder = new InterestRateBuilder();
+                    contentBuilder.append(interestRateBuilder.build());
+                    // Extract data using getters
+                    widgetDataMap.put("interestRate", interestRateBuilder.getCurrentRate());
+                    widgetDataMap.put("meetingDate", interestRateBuilder.getMeetingDate());
                     break;
+
                 case WidgetType.ALPACA_COMPARISON:
                     List<String> symbols = section.getSymbols();
                     if (symbols != null) {
-                        AlpacaComparisonBuilder comparisonBuilder = new AlpacaComparisonBuilder(symbols);
-                        contentBuilder.append(comparisonBuilder.build());
+                        alpacaComparisonBuilder = new AlpacaComparisonBuilder(symbols);
+                        contentBuilder.append(alpacaComparisonBuilder.build());
+                        // Extract data using getter
+                        widgetDataMap.put("symbolsData", alpacaComparisonBuilder.getSymbolsData());
                     }
                     break;
+
                 case WidgetType.NOTION_GOALS:
                     NotionGoalsBuilder notionGoalsBuilder = new NotionGoalsBuilder();
                     contentBuilder.append(notionGoalsBuilder.build());
                     break;
+
                 case WidgetType.GREGORY:
-                    String speech = section.getSpeech();
-                    if (speech != null) {
-                        GregoryBuilder gregoryBuilder = new GregoryBuilder(speech);
-                        contentBuilder.append(gregoryBuilder.build());
-                    }
+                    // Generate LLM-based speech from accumulated widget data
+                    String llmSpeech = anthropicService.generateGregoryAnalysis(widgetDataMap);
+                    GregoryBuilder gregoryBuilder = new GregoryBuilder(llmSpeech);
+                    contentBuilder.append(gregoryBuilder.build());
                     break;
             }
         }
