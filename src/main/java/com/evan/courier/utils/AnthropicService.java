@@ -13,7 +13,7 @@ import java.util.Map;
 public class AnthropicService {
     private static final Logger logger = LoggerFactory.getLogger(AnthropicService.class);
     private final AnthropicClient client;
-    private static final String MODEL = "claude-3-5-sonnet-20241022";
+    private static final String MODEL = "claude-sonnet-4-5-20250929";
     private static final long MAX_TOKENS = 1024L;
     private static final String DEFAULT_FALLBACK_SPEECH =
         "Good morning! The markets are active today. Check out the data above!";
@@ -64,7 +64,8 @@ public class AnthropicService {
         prompt.append("You are Gregory, a friendly market analyst mascot. ");
         prompt.append("Based on the following market data, provide a brief, insightful analysis ");
         prompt.append("about the health of the tech industry. ");
-        prompt.append("Keep your response to 2-3 sentences, conversational and encouraging.\n\n");
+        prompt.append("Keep your response to 2-3 sentences.");
+        prompt.append("Be realistic about your insights. Do not include questions in your response.");
 
         // Add Interest Rate Data
         if (widgetData.containsKey("interestRate")) {

@@ -6,13 +6,13 @@
             <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 10px;">
                 <tr>
                     <td style="background-color: #ffffff; border: 2px solid #333; border-radius: 10px; padding: 15px 20px; max-width: 400px;">
-                        <p style="margin: 0; font-size: 14px; color: #333; text-align: center;">${speech}</p>
+                        <p style="margin: 0; font-size: 14px; color: #333; text-align: left;">${speech}</p>
                     </td>
                 </tr>
             </table>
 
             <!-- Gregory image -->
-            <img src="cid:gregory" alt="Gregory" style="max-width: 300px; height: auto; display: block; margin: 0 auto; border-radius: 10px;" />
+            <img src="cid:gregory" alt="Gregory" style="max-width: 300px; height: auto; display: block; margin: 0 auto; border-radius: 10px; border: 2px solid #333;" />
         </td>
     </tr>
 </table>
