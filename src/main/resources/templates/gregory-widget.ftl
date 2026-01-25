@@ -1,4 +1,4 @@
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 50px;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 30px;">
     <p style="margin: 10px 0; font-size: 32px; font-weight: bold; text-align: center;">Gregory's Analysis</p>
     <tr>
         <td align="center" style="padding: 20px 0;">

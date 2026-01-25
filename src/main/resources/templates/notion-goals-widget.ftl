@@ -1,7 +1,7 @@
-<table style="width: 100%; max-width: 540px; margin-top: 50px; border-collapse: collapse; background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-family: Arial, sans-serif; margin: 20px 0;">
+<table style="width: 100%; max-width: 540px; margin-top: 30px; border-collapse: collapse; background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-family: Arial, sans-serif; border-radius: 10px; overflow: hidden;">
     <thead>
         <tr>
-            <th style="background-color: #1a1a1a; color: #ffffff; padding: 16px; text-align: left; font-size: 18px; font-weight: 600;">
+            <th style="background-color: #1a3d2e; color: #ffffff; padding: 16px; text-align: left; font-size: 18px; font-weight: 600;">
                 Goals
             </th>
         </tr>

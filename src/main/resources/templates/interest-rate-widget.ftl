@@ -1,4 +1,4 @@
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 50px;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 30px;">
     <tr>
         <td align="center">
             <p style="margin-bottom: 5px 0; font-size: 16px; text-align: center;">The current federal funds rate is</p>
