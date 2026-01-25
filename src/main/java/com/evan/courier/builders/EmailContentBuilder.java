@@ -2,7 +2,6 @@ package com.evan.courier.builders;
 
 import com.evan.courier.models.Section;
 import com.evan.courier.models.YamlConfig;
-import com.evan.courier.utils.AnthropicService;
 import com.evan.courier.types.WidgetType;
 import com.evan.courier.utils.TemplateEngine;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +27,6 @@ public class EmailContentBuilder {
         // Build the content sections
         StringBuilder contentBuilder = new StringBuilder();
         Map<String, Object> widgetDataMap = new HashMap<>();
-        AnthropicService anthropicService = new AnthropicService();
 
         // Store builder references to extract data later
         InterestRateBuilder interestRateBuilder = null;
@@ -60,9 +58,7 @@ public class EmailContentBuilder {
                     break;
 
                 case WidgetType.GREGORY:
-                    // Generate LLM-based speech from accumulated widget data
-                    String llmSpeech = anthropicService.generateGregoryAnalysis(widgetDataMap);
-                    GregoryBuilder gregoryBuilder = new GregoryBuilder(llmSpeech);
+                    GregoryBuilder gregoryBuilder = new GregoryBuilder(widgetDataMap);
                     contentBuilder.append(gregoryBuilder.build());
                     break;
             }
