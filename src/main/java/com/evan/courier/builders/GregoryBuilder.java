@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,7 @@ public class GregoryBuilder {
   private static final String MODEL = "claude-sonnet-4-5-20250929";
   private static final long MAX_TOKENS = 1024L;
   private static final String DEFAULT_FALLBACK_SPEECH =
-      "Good morning! The markets are active today. Check out the data above!";
+      "I'm having trouble providing analysis at this time. Please check back later!";
 
   private final AnthropicClient client;
   private final Map<String, Object> widgetData;
@@ -85,6 +87,17 @@ public class GregoryBuilder {
     prompt.append(
         "Be realistic about your insights. Do not include questions in your response.\n\n");
 
+    // Add data range note
+    LocalDate endDate = LocalDate.now();
+    LocalDate startDate = endDate.minusWeeks(1);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+    prompt
+        .append("Data range: ")
+        .append(startDate.format(formatter))
+        .append(" - ")
+        .append(endDate.format(formatter))
+        .append("\n\n");
+
     // Add Interest Rate Data
     if (widgetData.containsKey("interestRate")) {
       String rate = (String) widgetData.get("interestRate");
@@ -110,8 +123,6 @@ public class GregoryBuilder {
             .append("\n");
       }
     }
-
-    prompt.append("\nProvide your analysis as Gregory:");
 
     return prompt.toString();
   }
