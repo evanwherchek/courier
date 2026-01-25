@@ -29,8 +29,9 @@ public class AlpacaComparisonBuilder {
         this.symbols = symbols;
         this.httpClient = new OkHttpClient();
         this.objectMapper = new ObjectMapper();
-        this.apiKeyId = System.getenv("ALPACA_API_KEY");
-        this.apiSecretKey = System.getenv("ALPACA_SECRET_KEY");
+        com.evan.courier.utils.SecretsManagerService secretsService = com.evan.courier.utils.SecretsManagerService.getInstance();
+        this.apiKeyId = secretsService.getSecret("ALPACA_API_KEY");
+        this.apiSecretKey = secretsService.getSecret("ALPACA_SECRET_KEY");
     }
 
     public String build() throws IOException {

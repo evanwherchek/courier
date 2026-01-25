@@ -35,7 +35,7 @@ public class InterestRateBuilder {
     public InterestRateBuilder() {
         this.httpClient = new OkHttpClient();
         this.objectMapper = new ObjectMapper();
-        this.fredApiKey = System.getenv("FRED_API_KEY");
+        this.fredApiKey = com.evan.courier.utils.SecretsManagerService.getInstance().getSecret("FRED_API_KEY");
     }
 
     public String build() throws IOException {

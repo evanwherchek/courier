@@ -19,7 +19,7 @@ public class AnthropicService {
         "Good morning! The markets are active today. Check out the data above!";
 
     public AnthropicService() {
-        String apiKey = System.getenv("ANTHROPIC_API_KEY");
+        String apiKey = SecretsManagerService.getInstance().getSecret("ANTHROPIC_API_KEY");
         if (apiKey == null || apiKey.isEmpty()) {
             logger.warn("ANTHROPIC_API_KEY not set, will use fallback speech");
             this.client = null;

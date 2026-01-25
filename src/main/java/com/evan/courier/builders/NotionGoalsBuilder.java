@@ -19,8 +19,9 @@ public class NotionGoalsBuilder {
     public NotionGoalsBuilder() {
         this.httpClient = new OkHttpClient();
         this.objectMapper = new ObjectMapper();
-        this.notionApiKey = System.getenv("NOTION_API_KEY");
-        this.databaseId = System.getenv("NOTION_GOALS_DATABASE_ID");
+        com.evan.courier.utils.SecretsManagerService secretsService = com.evan.courier.utils.SecretsManagerService.getInstance();
+        this.notionApiKey = secretsService.getSecret("NOTION_API_KEY");
+        this.databaseId = secretsService.getSecret("NOTION_GOALS_DATABASE_ID");
     }
 
     public String build() throws IOException {

@@ -1,6 +1,7 @@
 package com.evan.courier;
 
 import com.evan.courier.utils.PropertiesLoader;
+import com.evan.courier.utils.SecretsManagerService;
 import jakarta.activation.DataHandler;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
@@ -23,8 +24,9 @@ public class EmailService {
         // Read configuration from application.properties or environment variables
         String smtpHost = PropertiesLoader.getProperty("SMTP_HOST", "email-smtp.us-east-1.amazonaws.com");
         String smtpPort = PropertiesLoader.getProperty("SMTP_PORT", "587");
-        String smtpUsername = PropertiesLoader.getProperty("AWS_SES_SMTP_USER_NAME");
-        String smtpPassword = PropertiesLoader.getProperty("AWS_SES_SMTP_PASSWORD");
+        SecretsManagerService secretsService = SecretsManagerService.getInstance();
+        String smtpUsername = secretsService.getSecret("AWS_SES_SMTP_USER_NAME");
+        String smtpPassword = secretsService.getSecret("AWS_SES_SMTP_PASSWORD");
 
         // SMTP configuration
         props.put("mail.smtp.auth", "true");
