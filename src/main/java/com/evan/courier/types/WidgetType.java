@@ -5,4 +5,5 @@ public class WidgetType {
     public static final String ALPACA_COMPARISON = "alpacaComparison";
     public static final String NOTION_GOALS = "notionGoals";
     public static final String GREGORY = "gregory";
+    public static final String TOP_STORIES = "topStories";
 }

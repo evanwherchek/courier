@@ -57,6 +57,11 @@ public class EmailContentBuilder {
                     contentBuilder.append(notionGoalsBuilder.build());
                     break;
 
+                case WidgetType.TOP_STORIES:
+                    TopStoriesBuilder topStoriesBuilder = new TopStoriesBuilder();
+                    contentBuilder.append(topStoriesBuilder.build());
+                    break;
+
                 case WidgetType.GREGORY:
                     GregoryBuilder gregoryBuilder = new GregoryBuilder(widgetDataMap);
                     contentBuilder.append(gregoryBuilder.build());
