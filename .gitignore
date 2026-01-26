@@ -38,3 +38,6 @@ out/
 
 ### Claude ###
 .claude/
+
+### Sensitive info ###
+src/main/resources/courier.yaml
