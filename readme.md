@@ -58,11 +58,12 @@ sections:
   - type: "notionGoals"
   ```
 
-(Insert application diagram)
+<img width="1440" height="1024" alt="application-diagram" src="https://github.com/user-attachments/assets/aac2877a-64c4-4057-8b75-af526fee40f7" />
 
 ## Hosting
 
 Hosting is built on AWS with Lambda doing most of the heavy lifting. Supporting services like EventBridge, Secrets
 Manager, and Simple Email Service(SES) are also used.
 
-(Insert hosting diagram)
+<img width="1440" height="1024" alt="aws-diagram" src="https://github.com/user-attachments/assets/e5d119a9-7712-4d5c-afc0-10495fb68dc1" />
+
