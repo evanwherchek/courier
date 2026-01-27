@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class InterestRateBuilder {
+public class InterestRateBuilder implements Builder {
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final String fredApiKey;

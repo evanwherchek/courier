@@ -16,7 +16,7 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-public class TopStoriesBuilder {
+public class TopStoriesBuilder implements Builder {
   private final OkHttpClient httpClient;
   private static final String WSJ_RSS_URL =
       "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain";

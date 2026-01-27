@@ -8,7 +8,7 @@ import okhttp3.*;
 import java.io.IOException;
 import java.util.*;
 
-public class NotionGoalsBuilder {
+public class NotionGoalsBuilder implements Builder {
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final String notionApiKey;
