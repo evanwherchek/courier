@@ -47,7 +47,6 @@ are added to the final email.
 ```
 recipient: "john.doe@gmail.com"
 subject: "Your weekly report"
-name: "Evan"
 
 sections:
   - type: "alpacaComparison"
