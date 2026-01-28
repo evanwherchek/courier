@@ -3,7 +3,7 @@
 👋 Hi! Welcome to the codebase for Courier - a configurable Java application that sends a personalized newsletter with
 data relevant to my goals.
 
-(Insert logo banner here)
+<img width="1098" height="286" alt="Frame 2" src="https://github.com/user-attachments/assets/b11bf82d-6190-4aaf-bab7-984b0f5d2066" />
 
 ## Background
 
