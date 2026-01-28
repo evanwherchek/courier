@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="background-color: #1a3d2e; color: #ffffff; padding: 16px; text-align: left; font-size: 18px; font-weight: 600;">
-                Top Markets Stories
+                Top Stories
             </th>
         </tr>
     </thead>
