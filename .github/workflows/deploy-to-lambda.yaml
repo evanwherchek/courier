@@ -33,6 +33,8 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
           mask-aws-account-id: true
+        env:
+          ACTIONS_STEP_DEBUG: false
 
       - name: Deploy Lambda Function
         run: |
