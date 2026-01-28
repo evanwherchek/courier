@@ -4,11 +4,14 @@ import com.evan.courier.utils.TemplateEngine;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
 
 public class NotionGoalsBuilder implements Builder {
+  private static final Logger logger = LoggerFactory.getLogger(NotionGoalsBuilder.class);
   private final OkHttpClient httpClient;
   private final ObjectMapper objectMapper;
   private final String notionApiKey;
@@ -26,8 +29,10 @@ public class NotionGoalsBuilder implements Builder {
   }
 
   public String build() throws IOException {
+    logger.info("Querying Notion database for goals");
     Map<String, Object> data = new HashMap<>();
     List<Map<String, Object>> goalsData = getNotionGoalsData();
+    logger.info("Retrieved {} goals from Notion", goalsData.size());
 
     data.put("goals", goalsData);
 

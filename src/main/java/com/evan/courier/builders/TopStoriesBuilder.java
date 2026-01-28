@@ -8,6 +8,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -17,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class TopStoriesBuilder implements Builder {
+  private static final Logger logger = LoggerFactory.getLogger(TopStoriesBuilder.class);
   private final OkHttpClient httpClient;
   private static final String WSJ_RSS_URL = "https://feeds.content.dowjones.io/public/rss/";
   private static final int MAX_STORIES = 3;
@@ -34,12 +37,15 @@ public class TopStoriesBuilder implements Builder {
 
   public String build() throws IOException {
     try {
+      logger.info("Fetching top stories from RSS feed: {}", feed);
       Map<String, Object> data = new HashMap<>();
       List<Map<String, Object>> stories = fetchTopStories();
+      logger.info("Retrieved {} stories from feed", stories.size());
       data.put("stories", stories);
       return TemplateEngine.processTemplate("top-stories-widget.ftl", data);
     } catch (IOException e) {
       // Graceful fallback: return empty stories list
+      logger.error("Failed to fetch stories: {}", e.getMessage());
       Map<String, Object> data = new HashMap<>();
       data.put("stories", new ArrayList<>());
       return TemplateEngine.processTemplate("top-stories-widget.ftl", data);

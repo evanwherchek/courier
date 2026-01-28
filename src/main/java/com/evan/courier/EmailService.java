@@ -9,12 +9,15 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import jakarta.mail.util.ByteArrayDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class EmailService {
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     private final Session session;
 
@@ -70,7 +73,7 @@ public class EmailService {
 
         // Send the message
         Transport.send(message);
-        System.out.println("Email sent successfully to: " + to);
+        logger.info("Email sent successfully to: {}", to);
     }
 
     private void addInlineImage(MimeMultipart multipart, String contentId, String resourcePath) throws MessagingException, IOException {

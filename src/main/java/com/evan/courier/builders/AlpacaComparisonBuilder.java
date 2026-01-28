@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AlpacaComparisonBuilder implements Builder {
+  private static final Logger logger = LoggerFactory.getLogger(AlpacaComparisonBuilder.class);
   private List<String> symbols;
   private final OkHttpClient httpClient;
   private final ObjectMapper objectMapper;
@@ -33,9 +36,11 @@ public class AlpacaComparisonBuilder implements Builder {
         com.evan.courier.utils.SecretsManagerService.getInstance();
     this.apiKeyId = secretsService.getSecret("ALPACA_API_KEY");
     this.apiSecretKey = secretsService.getSecret("ALPACA_SECRET_KEY");
+    logger.info("Initialized AlpacaComparisonBuilder with {} symbols", symbols.size());
   }
 
   public String build() throws IOException {
+    logger.info("Fetching stock data for symbols: {}", symbols);
     Map<String, Object> data = new HashMap<>();
     cachedSymbolData = new java.util.ArrayList<>();
 
@@ -50,6 +55,7 @@ public class AlpacaComparisonBuilder implements Builder {
     }
 
     data.put("symbols", cachedSymbolData);
+    logger.info("Successfully fetched data for {} symbols", cachedSymbolData.size());
 
     return TemplateEngine.processTemplate("alpaca-comparison-widget.ftl", data);
   }

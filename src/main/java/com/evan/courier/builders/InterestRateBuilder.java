@@ -10,6 +10,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InterestRateBuilder implements Builder {
+  private static final Logger logger = LoggerFactory.getLogger(InterestRateBuilder.class);
   private final OkHttpClient httpClient;
   private final ObjectMapper objectMapper;
   private final String fredApiKey;
@@ -41,9 +44,12 @@ public class InterestRateBuilder implements Builder {
   }
 
   public String build() throws IOException {
+    logger.info("Fetching interest rate data");
     // Fetch and cache data
     cachedInterestRate = getCurrentFederalFundsRate();
+    logger.info("Current interest rate: {}%", cachedInterestRate);
     cachedMeetingDate = getNextFomcMeetingDate();
+    logger.info("Next FOMC meeting date: {}", cachedMeetingDate);
 
     // Build HTML
     Map<String, Object> data = new HashMap<>();

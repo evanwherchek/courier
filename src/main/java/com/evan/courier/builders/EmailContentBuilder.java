@@ -6,24 +6,29 @@ import com.evan.courier.types.WidgetType;
 import com.evan.courier.utils.TemplateEngine;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 public class EmailContentBuilder implements Builder {
+  private static final Logger logger = LoggerFactory.getLogger(EmailContentBuilder.class);
   private final YamlConfig config;
 
   public EmailContentBuilder(String yamlConfigPath) {
     try {
       ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
       this.config = mapper.readValue(new File(yamlConfigPath), YamlConfig.class);
+      logger.info("Loaded email config from {}", yamlConfigPath);
     } catch (IOException e) {
       throw new RuntimeException("Failed to read YAML config file: " + yamlConfigPath, e);
     }
   }
 
   public String build() throws IOException {
+    logger.info("Building email content with {} sections", config.getSections().size());
     // Build the content sections
     StringBuilder contentBuilder = new StringBuilder();
     Map<String, Object> widgetDataMap = new HashMap<>();

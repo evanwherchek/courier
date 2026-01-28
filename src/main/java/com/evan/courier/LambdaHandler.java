@@ -3,6 +3,8 @@ package com.evan.courier;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.evan.courier.builders.EmailContentBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,13 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LambdaHandler implements RequestHandler<Map<String, Object>, Map<String, Object>> {
+  private static final Logger logger = LoggerFactory.getLogger(LambdaHandler.class);
 
   @Override
   public Map<String, Object> handleRequest(Map<String, Object> input, Context context) {
     Map<String, Object> response = new HashMap<>();
 
     try {
-      context.getLogger().log("Starting email sending process...");
+      logger.info("Lambda invoked - starting email sending process");
 
       // Instantiate EmailService
       EmailService emailService = new EmailService();
@@ -37,14 +40,14 @@ public class LambdaHandler implements RequestHandler<Map<String, Object>, Map<St
       // Send email
       emailService.sendEmail(recipient, subject, emailContentBuilder.build());
 
-      context.getLogger().log("Email sent successfully.");
+      logger.info("Email sent successfully to {}", recipient);
 
       response.put("statusCode", 200);
       response.put("body", "Email sent successfully to " + recipient);
       response.put("success", true);
 
     } catch (Exception e) {
-      context.getLogger().log("Failed to send email: " + e.getMessage());
+      logger.error("Failed to send email: {}", e.getMessage());
       e.printStackTrace();
 
       response.put("statusCode", 500);

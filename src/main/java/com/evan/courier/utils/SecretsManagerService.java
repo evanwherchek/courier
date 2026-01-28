@@ -6,10 +6,14 @@ import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class SecretsManagerService {
+    private static final Logger logger = LoggerFactory.getLogger(SecretsManagerService.class);
     private static SecretsManagerService instance;
     private static final Object lock = new Object();
 
@@ -57,9 +61,9 @@ public class SecretsManagerService {
                 secretsCache.put(entry.getKey(), entry.getValue().asText())
             );
 
-            System.out.println("Successfully loaded secrets from AWS Secrets Manager");
+            logger.info("Successfully loaded secrets from AWS Secrets Manager");
         } catch (Exception e) {
-            System.err.println("Failed to load secrets from Secrets Manager: " + e.getMessage());
+            logger.error("Failed to load secrets from Secrets Manager: {}", e.getMessage());
         }
     }
 

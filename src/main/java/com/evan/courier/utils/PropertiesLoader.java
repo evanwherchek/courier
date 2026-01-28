@@ -1,10 +1,14 @@
 package com.evan.courier.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertiesLoader {
+    private static final Logger logger = LoggerFactory.getLogger(PropertiesLoader.class);
 
     private static final Properties properties = new Properties();
 
@@ -13,9 +17,10 @@ public class PropertiesLoader {
                 .getResourceAsStream("application.properties")) {
             if (input != null) {
                 properties.load(input);
+                logger.info("Loaded application.properties");
             }
         } catch (IOException e) {
-            System.err.println("Warning: Could not load application.properties: " + e.getMessage());
+            logger.info("Could not load application.properties: {}", e.getMessage());
         }
     }
 

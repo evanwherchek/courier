@@ -1,15 +1,18 @@
 package com.evan.courier;
 
 import com.evan.courier.builders.EmailContentBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CourierApplication {
+  private static final Logger logger = LoggerFactory.getLogger(CourierApplication.class);
 
   public static void main(String[] args) {
     try {
-      System.out.println("Starting email sending process...");
+      logger.info("Starting email sending process...");
 
       // Instantiate EmailService
       EmailService emailService = new EmailService();
@@ -30,10 +33,10 @@ public class CourierApplication {
       // Send email
       emailService.sendEmail(recipient, subject, emailContentBuilder.build());
 
-      System.out.println("Email sent successfully. Exiting application.");
+      logger.info("Email sent successfully. Exiting application.");
       System.exit(0);
     } catch (Exception e) {
-      System.err.println("Failed to send email: " + e.getMessage());
+      logger.error("Failed to send email: " + e.getMessage());
       e.printStackTrace();
       System.exit(1);
     }
