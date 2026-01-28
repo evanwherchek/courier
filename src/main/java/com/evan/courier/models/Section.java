@@ -11,6 +11,7 @@ public class Section {
     // Legacy fields for backward compatibility
     private List<String> symbols;
     private String speech;
+    private String feed;
 
     public Section() {
     }
@@ -53,5 +54,13 @@ public class Section {
 
     public void setSpeech(String speech) {
         this.speech = speech;
+    }
+
+    public String getFeed() {
+        return feed;
+    }
+
+    public void setFeed(String feed) {
+        this.feed = feed;
     }
 }

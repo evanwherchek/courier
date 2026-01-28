@@ -18,12 +18,18 @@ import java.util.*;
 
 public class TopStoriesBuilder implements Builder {
   private final OkHttpClient httpClient;
-  private static final String WSJ_RSS_URL =
-      "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain";
+  private static final String WSJ_RSS_URL = "https://feeds.content.dowjones.io/public/rss/";
   private static final int MAX_STORIES = 3;
+  private final String feed;
 
   public TopStoriesBuilder() {
     this.httpClient = new OkHttpClient();
+    this.feed = null;
+  }
+
+  public TopStoriesBuilder(String feed) {
+    this.httpClient = new OkHttpClient();
+    this.feed = feed;
   }
 
   public String build() throws IOException {
@@ -41,7 +47,8 @@ public class TopStoriesBuilder implements Builder {
   }
 
   private List<Map<String, Object>> fetchTopStories() throws IOException {
-    Request request = new Request.Builder().url(WSJ_RSS_URL).build();
+    String url = WSJ_RSS_URL + feed;
+    Request request = new Request.Builder().url(url).build();
 
     try (Response response = httpClient.newCall(request).execute()) {
       if (response.isSuccessful() && response.body() != null) {

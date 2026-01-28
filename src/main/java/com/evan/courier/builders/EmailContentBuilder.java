@@ -58,7 +58,9 @@ public class EmailContentBuilder implements Builder {
           break;
 
         case WidgetType.TOP_STORIES:
-          TopStoriesBuilder topStoriesBuilder = new TopStoriesBuilder();
+          String feed = section.getFeed();
+          TopStoriesBuilder topStoriesBuilder =
+              (feed != null) ? new TopStoriesBuilder(feed) : new TopStoriesBuilder();
           contentBuilder.append(topStoriesBuilder.build());
           break;
 
