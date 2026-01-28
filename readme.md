@@ -20,7 +20,7 @@ metrics indicating the health of the tech sector, relevant news stories about th
 on my yearly goals. The Sunday morning schedule allows me to wake up on a morning when I am well rested, see how things
 are going, and decide what my goals for the new week will be.
 
-(Insert courier email images here)
+<img width="50%" height="1346" alt="image" src="https://github.com/user-attachments/assets/dd597f51-ba2a-4a76-8fec-56025f82014a" />
 
 ## Features:
 
@@ -46,15 +46,30 @@ are added to the final email.
 
 ```
 recipient: "john.doe@gmail.com"
-subject: "Your weekly report"
+subject: "Your weekly update"
+includeDateInSubject: true
 
 sections:
-  - type: "alpacaComparison"
+  - type: "alpacaComparison" # Comparison of different symbols' weekly performance with YTD performance
     symbols: [ "QQQ", "SPY", "NVDA" ]
-  - type: "interestRate"
-  - type: "topStories"
-  - type: "gregory"
-  - type: "notionGoals"
+
+  - type: "interestRate" # Returns the current fed interest rate with the next FOMC meeting date
+
+  - type: "topStories" # Lists 3 WSJ stories from the past week. The category can be chosen by setting feed to the desired RSS feed
+    feed: "RSSMarketsMain"
+    # Available feeds: RSSOpinion, RSSWorldNews, WSJcomUSBusiness, RSSMarketsMain, RSSWSJD(Technology), RSSLifestyle, RSSUSnews,
+    # socialpoliticsfeed, socialeconomyfeed, RSSArtsCulture, latestnewsrealestate, RSSPersonalFinance, socialhealth, RSSStyle, rsssportsfeed
+    # Source: https://www.wsj.com/news/rss-news-and-feeds?gaa_at=eafs&gaa_n=AWEtsqfQHh51oaaAEWNKCWYQQ_ZH5P-uuzAnUNZkQh2LTOghNI58leT3qen_&gaa_ts=6979757b&gaa_sig=kkIoeSoEETyGZcuCBSXL_Fw3Qd_gDPr3pdHmGzGTHJ7N7EZzwozUHZgJjFj1bcKXUiecyiLi53c98wzg10UhPw%3D%3D
+
+  - type: "gregory" # Implements gregory to provide analysis. Data from alpacaComparison and interestRate are appended to the prompt
+    prompt: |
+      You are Gregory, a friendly market analyst.
+      Based on the following market data, provide a brief, insightful analysis about the health of the tech industry.
+      Keep your response to 2-3 sentences.
+      Be realistic about your insights.
+      Do not include questions in your response.
+
+  - type: "notionGoals" # Shows progress on goals in a Notion database
   ```
 
 <img width="1440" height="1024" alt="application-diagram" src="https://github.com/user-attachments/assets/aac2877a-64c4-4057-8b75-af526fee40f7" />
