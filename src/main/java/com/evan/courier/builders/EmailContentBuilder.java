@@ -65,7 +65,9 @@ public class EmailContentBuilder implements Builder {
           break;
 
         case WidgetType.GREGORY:
-          GregoryBuilder gregoryBuilder = new GregoryBuilder(widgetDataMap);
+          String prompt = section.getPrompt();
+          GregoryBuilder gregoryBuilder =
+              (prompt != null) ? new GregoryBuilder(widgetDataMap, prompt) : new GregoryBuilder(widgetDataMap);
           contentBuilder.append(gregoryBuilder.build());
           break;
       }

@@ -12,6 +12,7 @@ public class Section {
     private List<String> symbols;
     private String speech;
     private String feed;
+    private String prompt;
 
     public Section() {
     }
@@ -62,5 +63,13 @@ public class Section {
 
     public void setFeed(String feed) {
         this.feed = feed;
+    }
+
+    public String getPrompt() {
+        return prompt;
+    }
+
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
     }
 }

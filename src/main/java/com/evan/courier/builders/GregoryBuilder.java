@@ -25,9 +25,15 @@ public class GregoryBuilder implements Builder {
 
   private final AnthropicClient client;
   private final Map<String, Object> widgetData;
+  private final String customPrompt;
 
   public GregoryBuilder(Map<String, Object> widgetData) {
+    this(widgetData, null);
+  }
+
+  public GregoryBuilder(Map<String, Object> widgetData, String customPrompt) {
     this.widgetData = widgetData;
+    this.customPrompt = customPrompt;
 
     String apiKey = SecretsManagerService.getInstance().getSecret("ANTHROPIC_API_KEY");
     if (apiKey == null || apiKey.isEmpty()) {
@@ -80,12 +86,7 @@ public class GregoryBuilder implements Builder {
   private String buildPrompt(Map<String, Object> widgetData) {
     StringBuilder prompt = new StringBuilder();
 
-    prompt.append("You are Gregory, a friendly market analyst mascot. ");
-    prompt.append("Based on the following market data, provide a brief, insightful analysis ");
-    prompt.append("about the health of the tech industry. ");
-    prompt.append("Keep your response to 2-3 sentences.");
-    prompt.append(
-        "Be realistic about your insights. Do not include questions in your response.\n\n");
+    prompt.append(customPrompt).append("\n\n");
 
     // Add data range note
     LocalDate endDate = LocalDate.now();
