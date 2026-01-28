@@ -4,6 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.evan.courier.builders.EmailContentBuilder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,12 @@ public class LambdaHandler implements RequestHandler<Map<String, Object>, Map<St
               LambdaHandler.class.getClassLoader().getResource("courier.yaml").getPath());
       String recipient = emailContentBuilder.getRecipient();
       String subject = emailContentBuilder.getEmailSubject();
+
+      // Append date to subject if configured
+      if (emailContentBuilder.isIncludeDateInSubject()) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        subject = subject + " - " + dateFormat.format(new Date());
+      }
 
       // Send email
       emailService.sendEmail(recipient, subject, emailContentBuilder.build());

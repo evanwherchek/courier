@@ -7,6 +7,7 @@ public class YamlConfig {
     private String subject;
     private String name;
     private List<Section> sections;
+    private boolean includeDateInSubject;
 
     public YamlConfig() {
     }
@@ -47,5 +48,13 @@ public class YamlConfig {
 
     public void setRecipient(String recipient) {
         this.recipient = recipient;
+    }
+
+    public boolean isIncludeDateInSubject() {
+        return includeDateInSubject;
+    }
+
+    public void setIncludeDateInSubject(boolean includeDateInSubject) {
+        this.includeDateInSubject = includeDateInSubject;
     }
 }

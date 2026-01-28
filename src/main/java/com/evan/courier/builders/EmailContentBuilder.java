@@ -84,4 +84,8 @@ public class EmailContentBuilder implements Builder {
   public String getRecipient() {
     return config.getRecipient();
   }
+
+  public boolean isIncludeDateInSubject() {
+    return config.isIncludeDateInSubject();
+  }
 }
