@@ -8,8 +8,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,38 +109,40 @@ public class InterestRateBuilder implements Builder {
       if (response.isSuccessful() && response.body() != null) {
         String html = response.body().string();
         Document doc = Jsoup.parse(html);
+        String pageText = doc.text();
 
-        // Find all date elements - FOMC dates are typically in a specific format
-        // Pattern to match dates like "January 28-29, 2025" or "March 18-19, 2025"
-        Pattern datePattern =
-            Pattern.compile("([A-Z][a-z]+)\\s+(\\d{1,2})(?:-\\d{1,2})?,\\s+(\\d{4})");
         LocalDate today = LocalDate.now();
         LocalDate nextMeetingDate = null;
 
-        // Search through the document for date patterns
-        Elements elements = doc.getAllElements();
-        for (Element element : elements) {
-          String text = element.ownText();
-          Matcher matcher = datePattern.matcher(text);
+        // The FOMC calendar groups meetings by year section (e.g. "2026 FOMC Meetings").
+        // Individual meeting entries only contain "Month DD-DD" with no inline year.
+        // We scan the full page text, updating currentYear on each year header and
+        // constructing full dates when a month+day is found within that section.
+        Pattern combinedPattern =
+            Pattern.compile(
+                "(\\d{4})\\s+FOMC Meetings"
+                    + "|(January|February|March|April|May|June|July|August"
+                    + "|September|October|November|December)\\s+(\\d{1,2})");
 
-          while (matcher.find()) {
-            String month = matcher.group(1);
-            String day = matcher.group(2);
-            String year = matcher.group(3);
+        int currentYear = 0;
+        Matcher matcher = combinedPattern.matcher(pageText);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
 
+        while (matcher.find()) {
+          if (matcher.group(1) != null) {
+            currentYear = Integer.parseInt(matcher.group(1));
+          } else if (currentYear > 0) {
+            String month = matcher.group(2);
+            String day = matcher.group(3);
             try {
-              String dateString = String.format("%s %s, %s", month, day, year);
-              DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-              LocalDate meetingDate = LocalDate.parse(dateString, formatter);
-
-              // Find the first future date
+              LocalDate meetingDate =
+                  LocalDate.parse(month + " " + day + ", " + currentYear, formatter);
               if (meetingDate.isAfter(today)
                   && (nextMeetingDate == null || meetingDate.isBefore(nextMeetingDate))) {
                 nextMeetingDate = meetingDate;
               }
             } catch (DateTimeParseException e) {
-              // Skip invalid dates
-              continue;
+              // Skip unparseable dates
             }
           }
         }
