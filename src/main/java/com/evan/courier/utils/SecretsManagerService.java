@@ -22,6 +22,11 @@ public class SecretsManagerService {
     private static final String SECRET_NAME = "courier/api-keys";
     private static final String AWS_REGION = "us-east-1";
 
+    /**
+     * Private constructor that initializes the secrets cache and, when running in an AWS Lambda
+     * environment (detected via the {@code AWS_LAMBDA_FUNCTION_NAME} environment variable),
+     * eagerly loads all secrets from AWS Secrets Manager.
+     */
     private SecretsManagerService() {
         this.isLambdaEnvironment = System.getenv("AWS_LAMBDA_FUNCTION_NAME") != null;
         this.secretsCache = new HashMap<>();
@@ -31,6 +36,12 @@ public class SecretsManagerService {
         }
     }
 
+    /**
+     * Returns the singleton instance of {@code SecretsManagerService}, creating it on first call
+     * using double-checked locking for thread safety.
+     *
+     * @return the singleton {@code SecretsManagerService} instance
+     */
     public static SecretsManagerService getInstance() {
         if (instance == null) {
             synchronized (lock) {
@@ -42,6 +53,11 @@ public class SecretsManagerService {
         return instance;
     }
 
+    /**
+     * Fetches all secrets from the AWS Secrets Manager secret named {@code courier/api-keys}
+     * and populates the in-memory cache. Logs an error and leaves the cache empty if the
+     * request fails, allowing fallback to environment variables or application properties.
+     */
     private void loadSecretsFromSecretsManager() {
         try {
             AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard()
@@ -67,6 +83,17 @@ public class SecretsManagerService {
         }
     }
 
+    /**
+     * Retrieves the value for the given secret key using a three-tier priority:
+     * <ol>
+     *   <li>AWS Secrets Manager cache (only populated in Lambda environments)</li>
+     *   <li>Environment variable with the same name as {@code key}</li>
+     *   <li>{@link PropertiesLoader} reading from {@code application.properties}</li>
+     * </ol>
+     *
+     * @param key the secret key name (e.g., {@code "ANTHROPIC_API_KEY"})
+     * @return the secret value, or {@code null} if not found in any source
+     */
     public String getSecret(String key) {
         // 1. Check cache (if in Lambda and loaded)
         if (isLambdaEnvironment && secretsCache.containsKey(key)) {

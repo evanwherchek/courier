@@ -25,10 +25,16 @@ public class PropertiesLoader {
     }
 
     /**
-     * Get a property value, with the following precedence:
-     * 1. Environment variable
-     * 2. application.properties file
-     * 3. Default value (if provided)
+     * Retrieves a property value using the following priority order:
+     * <ol>
+     *   <li>Environment variable with the same name as {@code key}</li>
+     *   <li>{@code application.properties} file on the classpath</li>
+     *   <li>The supplied {@code defaultValue}</li>
+     * </ol>
+     *
+     * @param key          the property key to look up
+     * @param defaultValue the value to return if the key is not found in any source
+     * @return the resolved property value, or {@code defaultValue} if not found
      */
     public static String getProperty(String key, String defaultValue) {
         // First check environment variable
@@ -47,6 +53,13 @@ public class PropertiesLoader {
         return defaultValue;
     }
 
+    /**
+     * Retrieves a property value using environment variable and {@code application.properties}
+     * as sources, returning {@code null} if the key is not found.
+     *
+     * @param key the property key to look up
+     * @return the resolved property value, or {@code null} if not found
+     */
     public static String getProperty(String key) {
         return getProperty(key, null);
     }

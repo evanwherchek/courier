@@ -14,6 +14,20 @@ import java.util.Map;
 public class LambdaHandler implements RequestHandler<Map<String, Object>, Map<String, Object>> {
   private static final Logger logger = LoggerFactory.getLogger(LambdaHandler.class);
 
+  /**
+   * AWS Lambda entry point that builds and sends the weekly email digest.
+   *
+   * <p>Loads {@code courier.yaml} from the classpath, builds the HTML email content via
+   * {@link com.evan.courier.builders.EmailContentBuilder}, optionally appends today's date to the
+   * subject line, and delivers the email through {@link EmailService}. Returns a response map
+   * with {@code statusCode}, {@code body}, and {@code success} keys; on failure, also includes
+   * an {@code error} key with the exception message.
+   *
+   * @param input the Lambda invocation event payload (not used)
+   * @param context the Lambda execution context (not used)
+   * @return a map representing the HTTP-style response with keys {@code statusCode},
+   *         {@code body}, {@code success}, and optionally {@code error}
+   */
   @Override
   public Map<String, Object> handleRequest(Map<String, Object> input, Context context) {
     Map<String, Object> response = new HashMap<>();

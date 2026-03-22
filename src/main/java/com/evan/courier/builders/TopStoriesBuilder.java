@@ -25,16 +25,35 @@ public class TopStoriesBuilder implements Builder {
   private static final int MAX_STORIES = 3;
   private final String feed;
 
+  /**
+   * Constructs a {@code TopStoriesBuilder} with no feed path specified. The feed must be set
+   * separately or the default base URL will be used as-is.
+   */
   public TopStoriesBuilder() {
     this.httpClient = new OkHttpClient();
     this.feed = null;
   }
 
+  /**
+   * Constructs a {@code TopStoriesBuilder} for the given WSJ RSS feed path.
+   *
+   * @param feed the feed path appended to the base WSJ RSS URL
+   *             (e.g., {@code "RSSWorldNews"})
+   */
   public TopStoriesBuilder(String feed) {
     this.httpClient = new OkHttpClient();
     this.feed = feed;
   }
 
+  /**
+   * Fetches the top stories from the configured RSS feed and renders the
+   * {@code top-stories-widget.ftl} template. On failure, gracefully falls back to rendering
+   * the template with an empty stories list rather than propagating the exception.
+   *
+   * @return the rendered HTML for the top stories widget
+   * @throws IOException never thrown directly; exceptions from the feed fetch are caught
+   *                     and handled with an empty fallback list
+   */
   public String build() throws IOException {
     try {
       logger.info("Fetching top stories from RSS feed: {}", feed);
@@ -52,6 +71,16 @@ public class TopStoriesBuilder implements Builder {
     }
   }
 
+  /**
+   * Fetches and parses the RSS feed, filters articles published within the past 7 days,
+   * sorts them by publication date descending, and returns the top {@value #MAX_STORIES} stories.
+   *
+   * <p>Each story map contains {@code title} (String), {@code link} (String), and
+   * {@code pubDate} (String formatted as {@code "MMM d"}) entries.
+   *
+   * @return a list of up to {@value #MAX_STORIES} story maps
+   * @throws IOException if the HTTP request fails or returns a non-successful status code
+   */
   private List<Map<String, Object>> fetchTopStories() throws IOException {
     String url = WSJ_RSS_URL + feed;
     Request request = new Request.Builder().url(url).build();
@@ -113,6 +142,14 @@ public class TopStoriesBuilder implements Builder {
     final String pubDateStr;
     final ZonedDateTime pubDate;
 
+    /**
+     * Constructs a {@code ParsedStory} with all fields.
+     *
+     * @param title      the article headline
+     * @param link       the URL of the article
+     * @param pubDateStr the raw publication date string from the RSS feed
+     * @param pubDate    the parsed {@link ZonedDateTime} used for sorting
+     */
     ParsedStory(String title, String link, String pubDateStr, ZonedDateTime pubDate) {
       this.title = title;
       this.link = link;
@@ -121,6 +158,14 @@ public class TopStoriesBuilder implements Builder {
     }
   }
 
+  /**
+   * Parses an RFC 1123 date-time string and formats it as a short display date.
+   *
+   * @param pubDateString the publication date string in RFC 1123 format
+   *                      (e.g., {@code "Fri, 21 Mar 2026 12:00:00 +0000"})
+   * @return the date formatted as {@code "MMM d"} (e.g., {@code "Mar 21"}),
+   *         or {@code "Recent"} if the string cannot be parsed
+   */
   private String formatDate(String pubDateString) {
     try {
       DateTimeFormatter rssFormatter = DateTimeFormatter.RFC_1123_DATE_TIME;

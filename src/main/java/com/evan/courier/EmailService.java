@@ -21,6 +21,12 @@ public class EmailService {
 
     private final Session session;
 
+    /**
+     * Constructs the {@code EmailService} by reading SMTP host and port from
+     * {@link com.evan.courier.utils.PropertiesLoader} and SMTP credentials from
+     * {@link com.evan.courier.utils.SecretsManagerService}, then creating an authenticated
+     * Jakarta Mail {@link Session} with STARTTLS enabled.
+     */
     public EmailService() {
         Properties props = new Properties();
 
@@ -50,6 +56,19 @@ public class EmailService {
         });
     }
 
+    /**
+     * Composes and sends an HTML email with inline images via the configured SMTP session.
+     *
+     * <p>The message is assembled as a {@code multipart/related} MIME structure so that
+     * referenced inline images (sun.png, gregory.png) are embedded directly in the email
+     * rather than attached as separate files.
+     *
+     * @param to          the recipient email address
+     * @param subject     the email subject line
+     * @param htmlContent the complete HTML body of the email
+     * @throws MessagingException if the message cannot be constructed or delivered
+     * @throws IOException        if an inline image resource cannot be read from the classpath
+     */
     public void sendEmail(String to, String subject, String htmlContent) throws MessagingException, IOException {
         MimeMessage message = new MimeMessage(session);
 
@@ -76,6 +95,17 @@ public class EmailService {
         logger.info("Email sent successfully to: {}", to);
     }
 
+    /**
+     * Loads a PNG image from the classpath and attaches it inline to the given
+     * {@link MimeMultipart}, making it referenceable in HTML via {@code cid:<contentId>}.
+     *
+     * @param multipart    the MIME multipart container to attach the image to
+     * @param contentId    the Content-ID value (without angle brackets) used to reference
+     *                     the image in the HTML body
+     * @param resourcePath the classpath path to the PNG image resource
+     * @throws MessagingException if the MIME body part cannot be configured
+     * @throws IOException        if the image resource is not found or cannot be read
+     */
     private void addInlineImage(MimeMultipart multipart, String contentId, String resourcePath) throws MessagingException, IOException {
         MimeBodyPart imagePart = new MimeBodyPart();
 
