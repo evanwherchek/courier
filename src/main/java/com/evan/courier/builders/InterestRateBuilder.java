@@ -34,6 +34,10 @@ public class InterestRateBuilder implements Builder {
   private String cachedInterestRate;
   private String cachedMeetingDate;
 
+  /**
+   * Constructs an {@code InterestRateBuilder} by initializing an HTTP client, a JSON mapper,
+   * and retrieving the FRED API key from {@link com.evan.courier.utils.SecretsManagerService}.
+   */
   public InterestRateBuilder() {
     this.httpClient = new OkHttpClient();
     this.objectMapper = new ObjectMapper();
@@ -41,6 +45,14 @@ public class InterestRateBuilder implements Builder {
         com.evan.courier.utils.SecretsManagerService.getInstance().getSecret("FRED_API_KEY");
   }
 
+  /**
+   * Fetches the current federal funds rate and the next FOMC meeting date, caches both values
+   * for later retrieval via {@link #getCurrentRate()} and {@link #getMeetingDate()}, then renders
+   * and returns the {@code interest-rate-widget.ftl} template.
+   *
+   * @return the rendered HTML for the interest rate widget
+   * @throws IOException if either data fetch fails
+   */
   public String build() throws IOException {
     logger.info("Fetching interest rate data");
     // Fetch and cache data
@@ -58,10 +70,11 @@ public class InterestRateBuilder implements Builder {
   }
 
   /**
-   * Fetches the current federal funds rate from the FRED API
+   * Fetches the most recent federal funds rate observation from the FRED API using the
+   * {@code FEDFUNDS} series, sorted descending to obtain the latest value.
    *
-   * @return The current federal funds rate as a formatted string
-   * @throws IOException if the API request fails
+   * @return the current federal funds rate formatted to two decimal places (e.g., {@code "5.33"})
+   * @throws IOException if the HTTP request fails or the response contains no observations
    */
   private String getCurrentFederalFundsRate() throws IOException {
     String url =
@@ -97,10 +110,14 @@ public class InterestRateBuilder implements Builder {
   }
 
   /**
-   * Scrapes the Federal Reserve website to get the next FOMC meeting date
+   * Scrapes the Federal Reserve FOMC calendar page and returns the next upcoming meeting date.
    *
-   * @return The next meeting date formatted as mm/dd
-   * @throws IOException if the web scraping fails
+   * <p>The page groups meetings under year headings (e.g., "2026 FOMC Meetings"). A regex scans
+   * the full page text, tracking the current year from each heading and constructing a
+   * {@link java.time.LocalDate} from each month/day entry. The earliest future date is returned.
+   *
+   * @return the next FOMC meeting date formatted as {@code m/d} (e.g., {@code "4/29"})
+   * @throws IOException if the HTTP request fails or no future meeting date can be found
    */
   private String getNextFomcMeetingDate() throws IOException {
     Request request = new Request.Builder().url(FOMC_CALENDAR_URL).build();
@@ -160,18 +177,20 @@ public class InterestRateBuilder implements Builder {
   }
 
   /**
-   * Get the cached current interest rate
+   * Returns the current federal funds rate cached during the most recent call to {@link #build()}.
    *
-   * @return The current federal funds rate, or null if not yet fetched
+   * @return the current federal funds rate string, or {@code null} if {@link #build()} has not
+   *         yet been called
    */
   public String getCurrentRate() {
     return cachedInterestRate;
   }
 
   /**
-   * Get the cached next FOMC meeting date
+   * Returns the next FOMC meeting date cached during the most recent call to {@link #build()}.
    *
-   * @return The next meeting date, or null if not yet fetched
+   * @return the next meeting date formatted as {@code m/d}, or {@code null} if {@link #build()}
+   *         has not yet been called
    */
   public String getMeetingDate() {
     return cachedMeetingDate;

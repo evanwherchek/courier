@@ -10,6 +10,16 @@ import java.util.Date;
 public class CourierApplication {
   private static final Logger logger = LoggerFactory.getLogger(CourierApplication.class);
 
+  /**
+   * Entry point for local execution of the Courier email digest.
+   *
+   * <p>Loads {@code courier.yaml} from the classpath, builds the HTML email content via
+   * {@link com.evan.courier.builders.EmailContentBuilder}, optionally appends today's date to the
+   * subject line, and delivers the email through {@link EmailService}. Exits with code {@code 0}
+   * on success or {@code 1} on failure.
+   *
+   * @param args command-line arguments (not used)
+   */
   public static void main(String[] args) {
     try {
       logger.info("Starting email sending process...");

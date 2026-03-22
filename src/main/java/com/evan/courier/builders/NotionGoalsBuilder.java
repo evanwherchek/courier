@@ -19,6 +19,11 @@ public class NotionGoalsBuilder implements Builder {
   private static final String NOTION_API_BASE_URL = "https://api.notion.com/v1";
   private static final String NOTION_VERSION = "2022-06-28";
 
+  /**
+   * Constructs a {@code NotionGoalsBuilder} by initializing an HTTP client, a JSON mapper,
+   * and retrieving the Notion API key and goals database ID from
+   * {@link com.evan.courier.utils.SecretsManagerService}.
+   */
   public NotionGoalsBuilder() {
     this.httpClient = new OkHttpClient();
     this.objectMapper = new ObjectMapper();
@@ -28,6 +33,13 @@ public class NotionGoalsBuilder implements Builder {
     this.databaseId = secretsService.getSecret("NOTION_GOALS_DATABASE_ID");
   }
 
+  /**
+   * Queries the configured Notion goals database, filters and formats the results, and renders
+   * the {@code notion-goals-widget.ftl} template.
+   *
+   * @return the rendered HTML for the Notion goals widget
+   * @throws IOException if the Notion API request fails
+   */
   public String build() throws IOException {
     logger.info("Querying Notion database for goals");
     Map<String, Object> data = new HashMap<>();
@@ -39,6 +51,17 @@ public class NotionGoalsBuilder implements Builder {
     return TemplateEngine.processTemplate("notion-goals-widget.ftl", data);
   }
 
+  /**
+   * POSTs a query to the Notion database API, parses each page result, filters to only those
+   * with the "Include on report" checkbox checked, extracts goal properties, and returns the
+   * results sorted alphabetically by category.
+   *
+   * <p>Each goal map contains {@code title}, {@code current}, {@code total}, {@code category},
+   * and {@code progressPercentage} (capped at 100) entries.
+   *
+   * @return a list of goal data maps sorted by category
+   * @throws IOException if the HTTP request fails or returns a non-successful status code
+   */
   private List<Map<String, Object>> getNotionGoalsData() throws IOException {
     String url = String.format("%s/databases/%s/query", NOTION_API_BASE_URL, databaseId);
 
@@ -94,6 +117,12 @@ public class NotionGoalsBuilder implements Builder {
     }
   }
 
+  /**
+   * Extracts the goal title from the Notion {@code Goal} title property.
+   *
+   * @param properties the {@link JsonNode} representing the page's properties object
+   * @return the goal title text, or {@code "Untitled Goal"} if the property is missing or empty
+   */
   private String extractTitle(JsonNode properties) {
     if (properties.has("Goal")) {
       JsonNode titleProp = properties.get("Goal");
@@ -107,6 +136,13 @@ public class NotionGoalsBuilder implements Builder {
     return "Untitled Goal";
   }
 
+  /**
+   * Extracts a numeric value from a Notion number property.
+   *
+   * @param properties   the {@link JsonNode} representing the page's properties object
+   * @param propertyName the name of the number property to extract (e.g., {@code "Current"})
+   * @return the numeric value, or {@code 0.0} if the property is missing or null
+   */
   private double extractNumber(JsonNode properties, String propertyName) {
     if (properties.has(propertyName)) {
       JsonNode numberProp = properties.get(propertyName);
@@ -117,6 +153,13 @@ public class NotionGoalsBuilder implements Builder {
     return 0.0;
   }
 
+  /**
+   * Extracts the selected option name from a Notion select property.
+   *
+   * @param properties   the {@link JsonNode} representing the page's properties object
+   * @param propertyName the name of the select property to extract (e.g., {@code "Category"})
+   * @return the selected option name, or an empty string if the property is missing or unset
+   */
   private String extractSelect(JsonNode properties, String propertyName) {
     if (properties.has(propertyName)) {
       JsonNode selectProp = properties.get(propertyName);
@@ -130,6 +173,13 @@ public class NotionGoalsBuilder implements Builder {
     return "";
   }
 
+  /**
+   * Extracts the boolean value from a Notion checkbox property.
+   *
+   * @param properties   the {@link JsonNode} representing the page's properties object
+   * @param propertyName the name of the checkbox property (e.g., {@code "Include on report"})
+   * @return the checkbox value, or {@code false} if the property is missing
+   */
   private boolean extractCheckbox(JsonNode properties, String propertyName) {
     if (properties.has(propertyName)) {
       JsonNode checkboxProp = properties.get(propertyName);
@@ -140,6 +190,19 @@ public class NotionGoalsBuilder implements Builder {
     return false;
   }
 
+  /**
+   * Constructs a goal data map for use in the Freemarker template.
+   *
+   * <p>The {@code progressPercentage} value is capped at 100 to prevent over-filled progress bars.
+   * Both {@code current} and {@code total} are formatted via {@link #formatValue(double)}.
+   *
+   * @param title    the goal title
+   * @param current  the current progress value
+   * @param total    the target value
+   * @param category the category name used for grouping goals
+   * @return a map with keys {@code title}, {@code current}, {@code total}, {@code category},
+   *         and {@code progressPercentage}
+   */
   private Map<String, Object> createGoal(
       String title, double current, double total, String category) {
     Map<String, Object> goal = new HashMap<>();
@@ -151,6 +214,13 @@ public class NotionGoalsBuilder implements Builder {
     return goal;
   }
 
+  /**
+   * Formats a numeric value for display: omits the decimal portion for whole numbers,
+   * otherwise rounds to two decimal places.
+   *
+   * @param value the numeric value to format
+   * @return {@code "42"} for whole numbers or {@code "42.50"} for fractional values
+   */
   private String formatValue(double value) {
     // Format without decimals if it's a whole number, otherwise with 2 decimals
     if (value == Math.floor(value)) {

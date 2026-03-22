@@ -21,6 +21,14 @@ public class TemplateEngine {
         logger.info("Template engine initialized");
     }
 
+    /**
+     * Renders a Freemarker template from the {@code /templates} classpath directory.
+     *
+     * @param templateName the filename of the template (e.g., {@code "email-wrapper.ftl"})
+     * @param data         the data model map made available to the template during processing
+     * @return the fully rendered template output as a string
+     * @throws RuntimeException if the template cannot be loaded or processing fails
+     */
     public static String processTemplate(String templateName, Map<String, Object> data) {
         try {
             Template template = cfg.getTemplate(templateName);

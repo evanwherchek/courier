@@ -17,6 +17,13 @@ public class EmailContentBuilder implements Builder {
   private static final Logger logger = LoggerFactory.getLogger(EmailContentBuilder.class);
   private final YamlConfig config;
 
+  /**
+   * Constructs an {@code EmailContentBuilder} by deserializing the {@code courier.yaml}
+   * configuration file at the given path into a {@link com.evan.courier.models.YamlConfig}.
+   *
+   * @param yamlConfigPath the filesystem path to the {@code courier.yaml} configuration file
+   * @throws RuntimeException if the file cannot be read or parsed
+   */
   public EmailContentBuilder(String yamlConfigPath) {
     try {
       ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
@@ -27,6 +34,18 @@ public class EmailContentBuilder implements Builder {
     }
   }
 
+  /**
+   * Builds the complete HTML email body by iterating over the configured sections, instantiating
+   * the appropriate widget builder for each, and wrapping all widget HTML in the
+   * {@code email-wrapper.ftl} template.
+   *
+   * <p>Widget builders that expose data for the Gregory AI widget (e.g.,
+   * {@link InterestRateBuilder} and {@link AlpacaComparisonBuilder}) have their results cached
+   * and passed to {@link GregoryBuilder} when a {@code gregory} section is encountered.
+   *
+   * @return the fully rendered HTML email body
+   * @throws IOException if any widget builder fails to fetch data or render its template
+   */
   public String build() throws IOException {
     logger.info("Building email content with {} sections", config.getSections().size());
     // Build the content sections
@@ -86,14 +105,29 @@ public class EmailContentBuilder implements Builder {
     return TemplateEngine.processTemplate("email-wrapper.ftl", data);
   }
 
+  /**
+   * Returns the email subject line from the loaded YAML configuration.
+   *
+   * @return the subject string
+   */
   public String getEmailSubject() {
     return config.getSubject();
   }
 
+  /**
+   * Returns the recipient email address from the loaded YAML configuration.
+   *
+   * @return the recipient email address
+   */
   public String getRecipient() {
     return config.getRecipient();
   }
 
+  /**
+   * Returns whether today's date should be appended to the email subject line.
+   *
+   * @return {@code true} if the date should be appended; {@code false} otherwise
+   */
   public boolean isIncludeDateInSubject() {
     return config.isIncludeDateInSubject();
   }
