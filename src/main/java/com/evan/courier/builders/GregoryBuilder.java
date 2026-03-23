@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class GregoryBuilder implements Builder {
   private static final Logger logger = LoggerFactory.getLogger(GregoryBuilder.class);
-  private static final String MODEL = "claude-sonnet-4-5-20250929";
+  private static final String MODEL = "claude-sonnet-4-6";
   private static final long MAX_TOKENS = 1024L;
   private static final String DEFAULT_FALLBACK_SPEECH =
       "I'm having trouble providing analysis at this time. Please check back later!";
