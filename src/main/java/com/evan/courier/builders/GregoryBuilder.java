@@ -28,11 +28,11 @@ public class GregoryBuilder implements Builder {
   private final String customPrompt;
 
   /**
-   * Constructs a {@code GregoryBuilder} with the given widget data and no custom prompt,
-   * delegating to {@link #GregoryBuilder(Map, String)} with a {@code null} prompt.
+   * Constructs a {@code GregoryBuilder} with the given widget data and no custom prompt, delegating
+   * to {@link #GregoryBuilder(Map, String)} with a {@code null} prompt.
    *
    * @param widgetData a map of data collected from other widgets (e.g., interest rate, stock data)
-   *                   that is used to build the AI prompt
+   *     that is used to build the AI prompt
    */
   public GregoryBuilder(Map<String, Object> widgetData) {
     this(widgetData, null);
@@ -41,11 +41,11 @@ public class GregoryBuilder implements Builder {
   /**
    * Constructs a {@code GregoryBuilder} with the given widget data and a custom prompt prefix.
    *
-   * <p>Retrieves the Anthropic API key from {@link SecretsManagerService}. If the key is absent
-   * or empty, the Claude client is set to {@code null} and analysis will fall back to a
-   * default message.
+   * <p>Retrieves the Anthropic API key from {@link SecretsManagerService}. If the key is absent or
+   * empty, the Claude client is set to {@code null} and analysis will fall back to a default
+   * message.
    *
-   * @param widgetData   a map of data collected from other widgets used to build the AI prompt
+   * @param widgetData a map of data collected from other widgets used to build the AI prompt
    * @param customPrompt the prompt text prepended before the data context; may be {@code null}
    */
   public GregoryBuilder(Map<String, Object> widgetData, String customPrompt) {
@@ -62,8 +62,8 @@ public class GregoryBuilder implements Builder {
   }
 
   /**
-   * Generates an AI market commentary via {@link #generateAnalysis()} and renders it in the
-   * {@code gregory-widget.ftl} template.
+   * Generates an AI market commentary via {@link #generateAnalysis()} and renders it in the {@code
+   * gregory-widget.ftl} template.
    *
    * @return the rendered HTML for the Gregory widget
    * @throws IOException if the template cannot be processed
@@ -80,8 +80,8 @@ public class GregoryBuilder implements Builder {
   /**
    * Calls the Claude API to generate a market commentary string from the constructed prompt.
    *
-   * <p>Returns {@link #DEFAULT_FALLBACK_SPEECH} if the Anthropic client is not initialized
-   * (missing API key) or if an exception occurs during the API call.
+   * <p>Returns {@link #DEFAULT_FALLBACK_SPEECH} if the Anthropic client is not initialized (missing
+   * API key) or if an exception occurs during the API call.
    *
    * @return the AI-generated analysis text, or the fallback message on error
    */
@@ -118,12 +118,12 @@ public class GregoryBuilder implements Builder {
   /**
    * Assembles the full prompt string sent to the Claude API.
    *
-   * <p>The prompt begins with {@code customPrompt}, followed by a data range note covering
-   * the past week, then conditionally appends interest rate data (if present in
-   * {@code widgetData}) and stock performance data (if present in {@code widgetData}).
+   * <p>The prompt begins with {@code customPrompt}, followed by a data range note covering the past
+   * week, then conditionally appends interest rate data (if present in {@code widgetData}) and
+   * stock performance data (if present in {@code widgetData}).
    *
-   * @param widgetData a map that may contain {@code "interestRate"}, {@code "meetingDate"},
-   *                   and {@code "symbolsData"} entries populated by other builders
+   * @param widgetData a map that may contain {@code "interestRate"}, {@code "meetingDate"}, and
+   *     {@code "symbolsData"} entries populated by other builders
    * @return the fully constructed prompt string
    */
   private String buildPrompt(Map<String, Object> widgetData) {
@@ -175,8 +175,8 @@ public class GregoryBuilder implements Builder {
    * Extracts the text content from the first text block in the Claude API response.
    *
    * @param response the {@link Message} returned by the Claude API
-   * @return the text of the first text content block, or {@link #DEFAULT_FALLBACK_SPEECH}
-   *         if no text block is present
+   * @return the text of the first text content block, or {@link #DEFAULT_FALLBACK_SPEECH} if no
+   *     text block is present
    */
   private String extractTextFromResponse(Message response) {
     return response.content().stream()
