@@ -1,6 +1,6 @@
 plugins {
-	id 'java'
-	id 'application'
+    id 'java'
+    id 'application'
 }
 
 group = 'com.evan'
@@ -8,79 +8,79 @@ version = '0.0.1-SNAPSHOT'
 description = 'A project for reporting on meaningful statistics'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 application {
-	mainClass = 'com.evan.courier.CourierApplication'
+    mainClass = 'com.evan.courier.CourierApplication'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	// AWS Lambda
-	implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
-	implementation 'com.amazonaws:aws-lambda-java-events:3.11.4'
+    // AWS Lambda
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
+    implementation 'com.amazonaws:aws-lambda-java-events:3.11.4'
 
-	// AWS Secrets Manager
-	implementation 'com.amazonaws:aws-java-sdk-secretsmanager:1.12.565'
+    // AWS Secrets Manager
+    implementation 'com.amazonaws:aws-java-sdk-secretsmanager:1.12.797'
 
-	// Jakarta Mail
-	implementation 'jakarta.mail:jakarta.mail-api:2.1.3'
-	implementation 'org.eclipse.angus:angus-mail:2.0.3'
-	implementation 'jakarta.activation:jakarta.activation-api:2.1.3'
+    // Jakarta Mail
+    implementation 'jakarta.mail:jakarta.mail-api:2.1.3'
+    implementation 'org.eclipse.angus:angus-mail:2.0.5'
+    implementation 'jakarta.activation:jakarta.activation-api:2.1.3'
 
-	// Logging (SLF4J)
-	implementation 'org.slf4j:slf4j-api:2.0.9'
-	implementation 'org.slf4j:slf4j-simple:2.0.9'
+    // Logging (SLF4J)
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    implementation 'org.slf4j:slf4j-simple:2.0.9'
 
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
-	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.20.1'
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1'
-	implementation 'org.freemarker:freemarker:2.3.32'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.20.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1'
+    implementation 'org.freemarker:freemarker:2.3.32'
 
-	// HTTP client
-	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    // HTTP client
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
-	// HTML parsing
-	implementation 'org.jsoup:jsoup:1.17.2'
+    // HTML parsing
+    implementation 'org.jsoup:jsoup:1.17.2'
 
-	// Anthropic Claude SDK
-	implementation 'com.anthropic:anthropic-java:2.11.1'
+    // Anthropic Claude SDK
+    implementation 'com.anthropic:anthropic-java:2.18.0'
 
-	// SVG to PNG conversion
-	implementation 'org.apache.xmlgraphics:batik-transcoder:1.17'
-	implementation 'org.apache.xmlgraphics:batik-codec:1.17'
+    // SVG to PNG conversion
+    implementation 'org.apache.xmlgraphics:batik-transcoder:1.17'
+    implementation 'org.apache.xmlgraphics:batik-codec:1.17'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 // Task for building Lambda deployment package
 task buildZip(type: Zip) {
-	from compileJava
-	from processResources
-	into('lib') {
-		from configurations.runtimeClasspath
-	}
-	archiveFileName = 'courier-lambda.zip'
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+    archiveFileName = 'courier-lambda.zip'
 }
 
 build.dependsOn buildZip
 
 jar {
-	manifest {
-		attributes 'Main-Class': 'com.evan.courier.CourierApplication'
-	}
-	from {
-		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-	}
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'com.evan.courier.CourierApplication'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
