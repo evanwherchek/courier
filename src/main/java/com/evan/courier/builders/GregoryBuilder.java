@@ -4,6 +4,8 @@ import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.messages.Message;
 import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
+import com.anthropic.models.messages.WebSearchTool20260209;
 import com.evan.courier.utils.SecretsManagerService;
 import com.evan.courier.utils.TemplateEngine;
 import org.slf4j.Logger;
@@ -15,10 +17,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GregoryBuilder implements Builder {
   private static final Logger logger = LoggerFactory.getLogger(GregoryBuilder.class);
-  private static final String MODEL = "claude-sonnet-4-6";
+  private static final Model MODEL = Model.CLAUDE_SONNET_4_6;
   private static final long MAX_TOKENS = 1024L;
   private static final String DEFAULT_FALLBACK_SPEECH =
       "I'm having trouble providing analysis at this time. Please check back later!";
@@ -95,20 +98,19 @@ public class GregoryBuilder implements Builder {
       String prompt = buildPrompt(widgetData);
       logger.info("Requesting Claude analysis");
 
-      Message response =
-          client
-              .messages()
-              .create(
-                  MessageCreateParams.builder()
-                      .model(MODEL)
-                      .maxTokens(MAX_TOKENS)
-                      .addUserMessage(prompt)
-                      .build());
+      MessageCreateParams params =
+          MessageCreateParams.builder()
+              .model(MODEL)
+              .maxTokens(MAX_TOKENS)
+              .addUserMessage(prompt)
+              .addTool(WebSearchTool20260209.builder().build())
+              .build();
+
+      Message response = client.messages().create(params);
 
       String analysis = extractTextFromResponse(response);
       logger.info("Successfully received Claude analysis");
       return analysis;
-
     } catch (Exception e) {
       logger.error("Failed to generate Claude analysis", e);
       return DEFAULT_FALLBACK_SPEECH;
@@ -179,10 +181,11 @@ public class GregoryBuilder implements Builder {
    *     text block is present
    */
   private String extractTextFromResponse(Message response) {
-    return response.content().stream()
-        .filter(block -> block.isText())
-        .map(block -> block.asText().text())
-        .findFirst()
-        .orElse(DEFAULT_FALLBACK_SPEECH);
+    String result =
+        response.content().stream()
+            .filter(block -> block.isText())
+            .map(block -> block.asText().text())
+            .collect(Collectors.joining("\n\n"));
+    return result.isEmpty() ? DEFAULT_FALLBACK_SPEECH : result;
   }
 }
