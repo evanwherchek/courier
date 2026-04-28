@@ -21,7 +21,7 @@ import java.util.*;
 public class TopStoriesBuilder implements Builder {
   private static final Logger logger = LoggerFactory.getLogger(TopStoriesBuilder.class);
   private final OkHttpClient httpClient;
-  private static final String WSJ_RSS_URL = "https://feeds.content.dowjones.io/public/rss/";
+  private final String wsjRssUrl;
   private static final int MAX_STORIES = 3;
   private final String feed;
 
@@ -30,8 +30,7 @@ public class TopStoriesBuilder implements Builder {
    * separately or the default base URL will be used as-is.
    */
   public TopStoriesBuilder() {
-    this.httpClient = new OkHttpClient();
-    this.feed = null;
+    this(new OkHttpClient(), null, "https://feeds.content.dowjones.io/public/rss/");
   }
 
   /**
@@ -41,8 +40,14 @@ public class TopStoriesBuilder implements Builder {
    *             (e.g., {@code "RSSWorldNews"})
    */
   public TopStoriesBuilder(String feed) {
-    this.httpClient = new OkHttpClient();
+    this(new OkHttpClient(), feed, "https://feeds.content.dowjones.io/public/rss/");
+  }
+
+  /** Package-private constructor for testing — allows injecting mock HTTP client and base URL. */
+  TopStoriesBuilder(OkHttpClient httpClient, String feed, String baseUrl) {
+    this.httpClient = httpClient;
     this.feed = feed;
+    this.wsjRssUrl = baseUrl;
   }
 
   /**
@@ -82,7 +87,7 @@ public class TopStoriesBuilder implements Builder {
    * @throws IOException if the HTTP request fails or returns a non-successful status code
    */
   private List<Map<String, Object>> fetchTopStories() throws IOException {
-    String url = WSJ_RSS_URL + feed;
+    String url = wsjRssUrl + feed;
     Request request = new Request.Builder().url(url).build();
 
     try (Response response = httpClient.newCall(request).execute()) {

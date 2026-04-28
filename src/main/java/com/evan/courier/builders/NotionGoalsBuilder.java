@@ -16,7 +16,7 @@ public class NotionGoalsBuilder implements Builder {
   private final ObjectMapper objectMapper;
   private final String notionApiKey;
   private final String databaseId;
-  private static final String NOTION_API_BASE_URL = "https://api.notion.com/v1";
+  private final String notionApiBaseUrl;
   private static final String NOTION_VERSION = "2022-06-28";
 
   /**
@@ -25,12 +25,23 @@ public class NotionGoalsBuilder implements Builder {
    * {@link com.evan.courier.utils.SecretsManagerService}.
    */
   public NotionGoalsBuilder() {
-    this.httpClient = new OkHttpClient();
-    this.objectMapper = new ObjectMapper();
     com.evan.courier.utils.SecretsManagerService secretsService =
         com.evan.courier.utils.SecretsManagerService.getInstance();
+    this.httpClient = new OkHttpClient();
+    this.objectMapper = new ObjectMapper();
     this.notionApiKey = secretsService.getSecret("NOTION_API_KEY");
     this.databaseId = secretsService.getSecret("NOTION_GOALS_DATABASE_ID");
+    this.notionApiBaseUrl = "https://api.notion.com/v1";
+  }
+
+  /** Package-private constructor for testing — allows injecting mock HTTP client and base URL. */
+  NotionGoalsBuilder(OkHttpClient httpClient, ObjectMapper objectMapper,
+                     String notionApiKey, String databaseId, String notionApiBaseUrl) {
+    this.httpClient = httpClient;
+    this.objectMapper = objectMapper;
+    this.notionApiKey = notionApiKey;
+    this.databaseId = databaseId;
+    this.notionApiBaseUrl = notionApiBaseUrl;
   }
 
   /**
@@ -63,7 +74,7 @@ public class NotionGoalsBuilder implements Builder {
    * @throws IOException if the HTTP request fails or returns a non-successful status code
    */
   private List<Map<String, Object>> getNotionGoalsData() throws IOException {
-    String url = String.format("%s/databases/%s/query", NOTION_API_BASE_URL, databaseId);
+    String url = String.format("%s/databases/%s/query", notionApiBaseUrl, databaseId);
 
     RequestBody requestBody = RequestBody.create("{}", MediaType.parse("application/json"));
 

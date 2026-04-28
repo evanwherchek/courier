@@ -23,7 +23,7 @@ public class AlpacaComparisonBuilder implements Builder {
   private final ObjectMapper objectMapper;
   private final String apiKeyId;
   private final String apiSecretKey;
-  private static final String BASE_URL = "https://data.alpaca.markets";
+  private final String baseUrl;
 
   // Cached data for LLM analysis
   private List<Map<String, Object>> cachedSymbolData;
@@ -37,14 +37,27 @@ public class AlpacaComparisonBuilder implements Builder {
    * @param symbols the list of stock ticker symbols to track (e.g., {@code ["SPY", "QQQ"]})
    */
   public AlpacaComparisonBuilder(List<String> symbols) {
+    com.evan.courier.utils.SecretsManagerService secretsService =
+        com.evan.courier.utils.SecretsManagerService.getInstance();
     this.symbols = symbols;
     this.httpClient = new OkHttpClient();
     this.objectMapper = new ObjectMapper();
-    com.evan.courier.utils.SecretsManagerService secretsService =
-        com.evan.courier.utils.SecretsManagerService.getInstance();
     this.apiKeyId = secretsService.getSecret("ALPACA_API_KEY");
     this.apiSecretKey = secretsService.getSecret("ALPACA_SECRET_KEY");
+    this.baseUrl = "https://data.alpaca.markets";
     logger.info("Initialized AlpacaComparisonBuilder with {} symbols", symbols.size());
+  }
+
+  /** Package-private constructor for testing — allows injecting mock HTTP client and base URL. */
+  AlpacaComparisonBuilder(List<String> symbols, OkHttpClient httpClient,
+                          ObjectMapper objectMapper, String apiKeyId,
+                          String apiSecretKey, String baseUrl) {
+    this.symbols = symbols;
+    this.httpClient = httpClient;
+    this.objectMapper = objectMapper;
+    this.apiKeyId = apiKeyId;
+    this.apiSecretKey = apiSecretKey;
+    this.baseUrl = baseUrl;
   }
 
   /**
@@ -150,7 +163,7 @@ public class AlpacaComparisonBuilder implements Builder {
     String url =
         String.format(
             "%s/v2/stocks/%s/bars?feed=iex&timeframe=%s&start=%s&end=%s&limit=10000",
-            BASE_URL, symbol, timeframe, start, end);
+            baseUrl, symbol, timeframe, start, end);
 
     Request request =
         new Request.Builder()
