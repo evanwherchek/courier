@@ -25,10 +25,9 @@ public class InterestRateBuilder implements Builder {
   private final OkHttpClient httpClient;
   private final ObjectMapper objectMapper;
   private final String fredApiKey;
-  private static final String FRED_BASE_URL = "https://api.stlouisfed.org/fred";
+  private final String fredBaseUrl;
+  private final String fomcCalendarUrl;
   private static final String FEDERAL_FUNDS_SERIES_ID = "FEDFUNDS";
-  private static final String FOMC_CALENDAR_URL =
-      "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm";
 
   // Cached data for LLM analysis
   private String cachedInterestRate;
@@ -39,10 +38,20 @@ public class InterestRateBuilder implements Builder {
    * and retrieving the FRED API key from {@link com.evan.courier.utils.SecretsManagerService}.
    */
   public InterestRateBuilder() {
-    this.httpClient = new OkHttpClient();
-    this.objectMapper = new ObjectMapper();
-    this.fredApiKey =
-        com.evan.courier.utils.SecretsManagerService.getInstance().getSecret("FRED_API_KEY");
+    this(new OkHttpClient(), new ObjectMapper(),
+        com.evan.courier.utils.SecretsManagerService.getInstance().getSecret("FRED_API_KEY"),
+        "https://api.stlouisfed.org/fred",
+        "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm");
+  }
+
+  /** Package-private constructor for testing — allows injecting mock HTTP client and URLs. */
+  InterestRateBuilder(OkHttpClient httpClient, ObjectMapper objectMapper,
+                      String fredApiKey, String fredBaseUrl, String fomcCalendarUrl) {
+    this.httpClient = httpClient;
+    this.objectMapper = objectMapper;
+    this.fredApiKey = fredApiKey;
+    this.fredBaseUrl = fredBaseUrl;
+    this.fomcCalendarUrl = fomcCalendarUrl;
   }
 
   /**
@@ -80,7 +89,7 @@ public class InterestRateBuilder implements Builder {
     String url =
         String.format(
             "%s/series/observations?series_id=%s&api_key=%s&file_type=json&limit=1&sort_order=desc",
-            FRED_BASE_URL, FEDERAL_FUNDS_SERIES_ID, fredApiKey);
+            fredBaseUrl, FEDERAL_FUNDS_SERIES_ID, fredApiKey);
 
     Request request = new Request.Builder().url(url).build();
 
@@ -120,7 +129,7 @@ public class InterestRateBuilder implements Builder {
    * @throws IOException if the HTTP request fails or no future meeting date can be found
    */
   private String getNextFomcMeetingDate() throws IOException {
-    Request request = new Request.Builder().url(FOMC_CALENDAR_URL).build();
+    Request request = new Request.Builder().url(fomcCalendarUrl).build();
 
     try (Response response = httpClient.newCall(request).execute()) {
       if (response.isSuccessful() && response.body() != null) {

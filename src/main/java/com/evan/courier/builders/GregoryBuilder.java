@@ -64,6 +64,13 @@ public class GregoryBuilder implements Builder {
     }
   }
 
+  /** Package-private constructor for testing — allows injecting a null or mock client. */
+  GregoryBuilder(Map<String, Object> widgetData, String customPrompt, AnthropicClient client) {
+    this.widgetData = widgetData;
+    this.customPrompt = customPrompt;
+    this.client = client;
+  }
+
   /**
    * Generates an AI market commentary via {@link #generateAnalysis()} and renders it in the {@code
    * gregory-widget.ftl} template.

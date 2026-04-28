@@ -1,0 +1,7 @@
+recipient: "test@example.com"
+subject: "Test Weekly Update"
+includeDateInSubject: false
+sections:
+  - type: "interestRate"
+  - type: "topStories"
+    feed: "RSSWorldNews"
